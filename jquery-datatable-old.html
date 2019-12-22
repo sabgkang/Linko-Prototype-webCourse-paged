@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>uGym Challenge</title>
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+<!--  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">-->
+ 
+ <style>
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap');
+  </style>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  
+  
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+
+  <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    
+  
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+
+</head>
+
+<body>
+  <h1>林口運動中心 - 團體課程管理</h1>
+  <hr>
+  <h2 id="inProgress">進行中課程</h2>
+  <button class="btn-blue" id="addBtn" onclick="addCourse()"><i class="fa fa-plus"></i>&nbsp 新增課程</button>
+
+  <button class="btn-red" id="refreshBtn" onclick="refreshCourse()" style="margin-left: 20px"><i class="fa fa-refresh"></i>&nbsp 刷新課程</button>
+
+  <!--  <table id="courseTable" class="display" width="100%" ></table>-->
+
+  <table id="courseTable" class="display" >
+    <thead>
+      <tr id="table-header">
+        <th style="width: 80px">課程編號</th>
+        <th>課程名稱</th>
+        <th style="width: 200px">老師</th>
+        <th style="width: 120px">時間</th>
+        <th style="width: 70px">卡路里燃燒</th>
+        <th style="width: 50px">課程人數</th>
+        <th style="width: 150px">操作</th>
+
+      </tr>
+    </thead>
+    <!--
+    <tbody>
+      <tr>
+        <td style="width: 70px; text-align: center">U0002</td>
+        <td>夜店風 Zumba 燃脂</td>
+        <td>Jacky</td>
+        <td>2019.08.29 18:30</td>
+        <td>150</td>
+        <td>30</td>
+        <td>Delete</td>
+
+      </tr>
+    </tbody>
+-->
+    <!--
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+-->
+  </table>
+
+  <div id="spacerBetweenTables" style="height: 100px; text-align: ">
+    <div style="height: 50px"></div>
+    <hr>
+    <h2>課程歷史紀錄</h2>
+  </div>
+  
+  <table id="courseHistory" class="display" style="width:100%;">
+    <thead>
+      <tr id="table-header">
+        <th style="width: 80px">課程編號</th>
+        <th>課程名稱</th>
+        <th style="width: 200px">老師</th>
+        <th style="width: 120px">時間</th>
+        <th style="width: 70px">卡路里燃燒</th>
+        <th style="width: 50px">課程人數</th>
+        <th style="width: 100px"></th>
+      </tr>
+    </thead>
+  </table>
+  
+  <div id="addCourse" style="height: 600px; font-family:'Noto Sans TC'">
+    <h1 id="courseNumber" value="00">新增團課課程 - U0000</h1>
+    <div style="font-size: 20px;">
+      <div class="courseLabel">課程名稱</div> <input id="courseName" class="courseInput" type="text" placeholder="請輸入課程名稱"><br>
+
+      <div class="courseLabel">老師姓名</div> <input id="coachName" class="courseInput" type="text" placeholder="請輸入老師姓名"><br>
+
+      <div class="courseLabel">助教姓名</div> <input id="assistName" class="courseInput" type="text" placeholder="請輸入助教姓名"><br>
+           
+      <div class="courseLabel">上課時間</div> <input id="courseTime" class="courseInput" type="text" placeholder="請輸入類似 2019.08.29 18:30"><br>
+
+      <div class="courseLabel">燃燒熱量</div> <input id="Calories" class="courseInput" type="text" placeholder="上課會燃燒的卡路里"><br>
+
+      <div class="courseLabel">課程人數</div> <input id="maxPersons" class="courseInput" type="text" placeholder="請輸入課程人數"><br>
+      
+      <div class="courseLabel">課程費用</div> <input id="fee" class="courseInput" type="text" placeholder="請輸入課程費用"><br>
+
+      <div class="courseLabel">其他說明</div> <input id="otherDesc" class="courseInput" type="text" placeholder="請輸入其他說明"><br>
+                  
+      <br>
+      <button class="btn-blue" onclick="courseConfirm()">確定</button>
+      <button class="btn-red" onclick="courseCancel()">取消</button>
+    </div>
+  </div>
+  
+  <div id="courseDetail" style="height: 600px; font-family:'Noto Sans TC'">
+    <h1 id="courseNumberDetail" value="00">簽到頁面</h1>
+    <div style="font-size: 20px;">
+      <div class="courseLabelDetail">課程名稱</div> <input id="courseNameDetail" class="courseInputDetail" type="text" placeholder="請輸入課程名稱"><br>
+
+      <div class="courseLabelDetail">老師姓名</div> <input id="coachNameDetail" class="courseInputDetail" type="text" placeholder="請輸入老師姓名"><br>
+
+      <div class="courseLabelDetail">助教姓名</div> <input id="assistNameDetail" class="courseInputDetail" type="text" placeholder="請輸入助教姓名"><br>
+           
+      <div class="courseLabelDetail">上課時間</div> <input id="courseTimeDetail" class="courseInputDetail" type="text" placeholder="請輸入類似 2019.08.29 18:30"><br>
+
+      <div class="courseLabelDetail">燃燒熱量</div> <input id="CaloriesDetail" class="courseInputDetail" type="text" placeholder="上課會燃燒的卡路里"><br>
+
+      <div class="courseLabelDetail">課程人數</div> <input id="maxPersonsDetail" class="courseInputDetail" type="text" placeholder="請輸入課程人數"><br>
+      
+      <div class="courseLabelDetail">課程費用</div> <input id="feeDetail" class="courseInputDetail" type="text" placeholder="請輸入課程費用"><br>
+
+      <div class="courseLabelDetail">其他說明</div> <input id="otherDescDetail" class="courseInputDetail" type="text" placeholder="請輸入其他說明"><br>
+                  
+      <br>
+      <button class="btn-blue" onclick="backToHome()">回到 課程管理</button>
+      <button class="btn-red" onclick="courseUpdate()" disabled="disabled" >更新 課程資料</button>
+      <br>
+      
+      <table id="courseMemberTable" class="display" style="width:100%;font-family:'Noto Sans TC'">
+        <thead>
+          <tr id="table-header">
+            <th style="width: 50px" >姓名</th>
+            <th style="width: 50px" >LINE ID</th>
+            <th style="width: 50px" >電話</th>            
+            <th style="width: 50px">身分證號</th>
+            <th >地址</th>
+            <th style="width: 20px" >繳費狀態</th>
+            <th style="width: 30px" >操作</th> 
+          </tr>
+        </thead>
+      </table
+      
+    </div>
+  </div>
+  
+
+  <script type="text/javascript">
+    var courseNum = 2; // TODO: get from Database
+    var inAddCourse = false;
+
+    // TODO: 用讀取 database 取代以下 hard coded 的 courseMemberSet
+    var courseMemberSet = [
+      ["謝東憲", "Jacky", "09XXXXXXXX", "A1XXXXXXXX", "台北市總統府", "YES"],
+    ];
+    
+    // TODO: 用讀取 database 取代以下 hard coded 的 dataSet
+    // [ID, Name, Coach, date/time, Calories, Max.Persons,
+    //  Assist, Fee, OtherDesc]
+    var dataSet = [
+      ["U0002", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30", 
+       "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"],
+    ];
+      
+    var dataSetHistory = [
+      ["U0001", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30", 
+       "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"],
+    ]; 
+      
+    $(document).ready(function() {
+      
+      $("#addCourse").hide();
+      $("#courseDetail").hide();
+      
+      var courseTable = $('#courseTable').DataTable({
+        data: dataSet,
+        pageLength: 8,
+        lengthChange: false,
+        deferRender: true,
+        columns: [{ //title: "課程編號"
+            className: "centerCell"
+          },
+          {
+            //title: "課程名稱"
+          },
+          { //title: "老師"
+            className: "centerCell"
+          },
+          {
+            //title: "時間"
+            className: "centerCell"
+          },
+          {
+            //title: "卡路里燃燒"
+            className: "centerCell"
+          },
+          {
+            //title: "人數"
+            className: "centerCell"
+          },
+          {
+            //title: "操作",
+            data: null,
+            defaultContent: 
+            "<button class = 'dueButton to-edit'>到期</button> " +
+            "<button class = 'detailButton to-edit'>詳細</button> " +
+            "<button class = 'deleteButton to-delete'>刪除</button>"            
+          }
+//          {
+//            //title: "操作",
+//            "render": function() {
+//              return $('<button onclick="cccFunction()">')
+//                .text("Delete")
+//                .wrap('<div></div>')
+//                .parent()
+//                .html();
+//            }
+//          }                  
+        ]
+      });
+
+//      $('#courseTable tbody').on('click', 'tr', function() {
+//        console.log("row select");
+//        if ($(this).hasClass('selected')) {
+//          $(this).removeClass('selected');
+//        } else {
+//          $('#courseTable').DataTable().$('tr.selected').removeClass('selected');
+//          $(this).addClass('selected');
+//        }
+//      });
+
+      $('#courseTable tbody').on('click', '.dueButton', function() {
+        console.log("Due is clicked");
+        
+        var sueIt = false;
+        dueIt = confirm("確定要課程過期!無法回復!");        
+        
+        if (dueIt) {
+          var data = courseTable.row($(this).parents('tr')).data();
+          console.log("delete:" + data[0]);
+          
+          dataSetHistory.push(data);
+          
+          dataSet = dataSet.filter(function(value, index, arr) {
+            return value[0] != data[0];
+          }); 
+
+          // TODO: 更新 database
+          courseTable.clear().draw();
+          courseTable.rows.add(dataSet);
+          courseTable.draw();        
+          
+          courseHistory.clear().draw();
+          courseHistory.rows.add(dataSetHistory);
+          courseHistory.draw();           
+        }
+
+      });
+      
+      $('#courseTable tbody').on('click', '.detailButton', function() {
+        console.log("Detail is clicked");
+
+        $("#courseTable").hide();
+        $("#courseHistory").hide();
+        $("#spacerBetweenTables").hide();
+      
+        //$(".dataTables_filter").hide();
+        //$(".dataTables_info").hide();
+        $('#courseTable_filter').hide();
+        $('#courseTable_info').hide();
+        $('#courseTable_paginate').hide();
+        $('#courseHistory_filter').hide();
+        $('#courseHistory_info').hide();        
+        $('#courseHistory_paginate').hide();      
+        $("#addCourse").hide();  
+        $("#inProgress").hide();
+        $("#addBtn").hide();
+        $("#refreshBtn").hide();      
+        
+        $("#courseMemberTable_filter").css({"font-size": "16px"});
+        $("#courseMemberTable_info").css({"font-size": "16px"});
+        $("#courseMemberTable_paginate").css({"font-size": "16px"});
+        
+        var data = courseTable.row($(this).parents('tr')).data();
+        console.log("detail:" + data[0]);    
+        
+        $("#courseNumberDetail").text("簽到頁面 - " + data[0] + data[1] +"@"+data[3]);
+        
+        $("#courseNameDetail").val(data[1]);
+        $("#coachNameDetail").val(data[2]);
+        $("#assistNameDetail").val(data[6]);
+        $("#courseTimeDetail").val(data[3]);  
+        $("#CaloriesDetail").val(data[4]);          
+        $("#maxPersonsDetail").val(data[5]);     
+        $("#feeDetail").val(data[7]);
+        $("#otherDescDetail").val(data[8]); 
+        
+        $("#courseDetail").show();
+        
+      });
+      
+      $("#courseTable tbody").on('click', '.deleteButton', function() {
+        // delete button
+        var data = courseTable.row($(this).parents('tr')).data();
+        console.log("delete:" + data[0]);
+
+        var deleteIt = false;
+        deleteIt = confirm("確定要刪除此課程!無法回復!");
+
+        if (deleteIt) {
+          //console.log("dddd");
+          dataSet = dataSet.filter(function(value, index, arr) {
+            return value[0] != data[0];
+          });
+
+          //courseNum--;
+        
+          // TODO: 更新 database
+          console.log(deleteIt);
+          console.log(dataSet);
+          courseTable.clear().draw();
+          courseTable.rows.add(dataSet);
+          courseTable.draw();
+        }
+      });
+
+      var courseHistory = $('#courseHistory').DataTable({
+        data: dataSetHistory,
+        pageLength: 8,
+        deferRender: true,
+        lengthChange: false,
+        columns: [{ //title: "課程編號"
+            className: "centerCell"
+          },
+          {
+            //title: "課程名稱"
+          },
+          { //title: "老師"
+            className: "centerCell"
+          },
+          {
+            //title: "時間"
+            className: "centerCell"
+          },
+          {
+            //title: "卡路里燃燒"
+            className: "centerCell"
+          },
+          {
+            //title: "人數"
+            className: "centerCell"
+          },
+
+        ]
+      });   
+      
+      var courseMemberTable = $('#courseMemberTable').DataTable({
+        data: courseMemberSet,
+        pageLength: 8,
+        lengthChange: false,
+        deferRender: true,
+        columns: [{ //title: "Name"
+            className: "centerCell"
+          },
+          {
+            //title: "LINE ID"
+            className: "centerCell"
+          },
+          { //title: "電話"
+            className: "centerCell"
+          },
+          {
+            //title: "身分證號"
+            className: "centerCell"
+          },
+          {
+            //title: "地址"
+            className: "centerCell"
+          },
+          {
+            //title: "繳費狀態"
+            className: "centerCell"
+          },                  
+          {
+            //title: "操作",
+            className: "centerCell",
+            data: null,
+            defaultContent: 
+            "<button class = 'payButton to-edit'>繳費</button> " +
+            "<button class = 'checkInButton to-edit'>簽到</button> "
+          }                  
+        ]
+      });
+
+    });
+  </script>
+  <script>
+    
+    function addCourse() {
+      console.log("addCourse");
+
+      courseNum++;
+      $("#courseNumber").text("新增團課課程 - U" + zeroFill(courseNum, 4));
+
+      $("#courseTable").hide();
+      $("#courseHistory").hide();
+      $("#spacerBetweenTables").hide();
+      
+      $(".dataTables_filter").hide();
+      $(".dataTables_info").hide();
+      $('#courseTable_paginate').hide();
+      $('#courseHistory_paginate').hide();
+      
+      $("#addCourse").show();
+      
+      $("#inProgress").hide();
+      $("#addBtn").hide();
+      $("#refreshBtn").hide();
+//      $("#addBtn").attr("disabled", true);
+//      $("#refreshBtn").attr("disabled", true);
+    }
+
+    function courseConfirm() {
+      console.log("courseConfirm");
+      console.log($("#courseName").val());
+
+      console.log(typeof $("#Calories").val());
+      var dataToAdd = [
+        "U" + zeroFill(courseNum, 4),
+        $("#courseName").val(),
+        $("#coachName").val(),
+        $("#courseTime").val(),
+        $("#Calories").val(),
+        $("#maxPersons").val(),
+        $("#assistName").val(),
+        $("#fee").val(),
+        $("#otherDesc").val(),        
+      ];
+
+      dataSet.push(dataToAdd);
+
+      var courseTable = $('#courseTable').DataTable();
+      courseTable.clear().draw();
+      courseTable.rows.add(dataSet);
+      courseTable.draw();
+
+      $("#addCourse").hide();
+      $("#courseTable").show();
+      $("#spacerBetweenTables").show();
+      $("#courseHistory").show();
+          
+      $(".dataTables_filter").show();
+      $(".dataTables_info").show();
+      $('#courseTable_paginate').show();
+      $('#courseHistory_paginate').show();      
+
+      $("#inProgress").show();      
+      $("#addBtn").show();
+      $("#refreshBtn").show();      
+//      $("#addBtn").attr("disabled", false);
+//      $("#refreshBtn").attr("disabled", false);      
+    }
+
+    function courseCancel() {
+      console.log("courseCancel");
+      courseNum--;
+      $("#addCourse").hide();
+      $("#spacerBetweenTables").show();
+      $("#courseHistory").show();
+      $("#courseTable").show();
+      
+      $(".dataTables_filter").show();
+      $(".dataTables_info").show();
+      $('#courseTable_paginate').show();
+      $('#courseHistory_paginate').show();            
+  
+      $("#inProgress").show();      
+      $("#addBtn").show();
+      $("#refreshBtn").show();       
+//      $("#addBtn").attr("disabled", false);
+//      $("#refreshBtn").attr("disabled", false);       
+    }
+
+    function zeroFill(number, width) {
+      width -= number.toString().length;
+      if (width > 0) {
+        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
+      }
+      return number + ""; // always return a string
+    }
+
+    function refreshCourse(){
+      console.log("Refresh Course");
+      
+      // TODO: 讀取 Database 的課程資料
+      
+      var courseTable = $('#courseTable').DataTable();
+      courseTable.clear().draw();
+      courseTable.rows.add(dataSet);
+      courseTable.draw();
+    }
+
+    function backToHome(){
+      console.log("Refresh Course");
+
+      $("#courseDetail").hide(); 
+      
+      $("#courseTable").show();
+      $("#courseHistory").show();
+      $("#spacerBetweenTables").show();
+      
+      $(".dataTables_filter").show();
+      $(".dataTables_info").show();
+      $('#courseTable_paginate').show();
+      $('#courseHistory_paginate').show();      
+      $("#addCourse").hide();  
+      $("#inProgress").show();
+      $("#addBtn").show();
+      $("#refreshBtn").show();            
+    }
+    
+    // below are for tests
+
+    function aaaFunction() {
+      console.log("aaa");
+      //$("#centerCell").css('background-color', 'red');
+      $("#aaa").css({
+        "background-color": "yellow",
+        "font-size": "200%"
+      });
+      $("#aaa").html('Save');
+    }
+
+
+
+    function cccFunction() {
+      console.log("ccc");
+
+      $("#courseTable").hide();
+      $("#addCourse").show();
+      //var courseTable = $('#courseTable').DataTable();
+
+
+      //      var rows = courseTable.rows( '.selected' ).indexes();
+      //
+      //      var data = courseTable.rows( rows ).data();
+      //      console.log(data[0]);
+
+      //      var newDataSet = dataSet.filter(function(value, index, arr){
+      //        return value[0] != selected;
+      //      });
+      //      console.log(newDataSet);
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Client Side 完整 排序、分頁、查詢(DataSource使用Ajax)
+    展示資料行加入checkbox、button、Hyperlink
+  </title>
+  <!--引用dataTables.css-->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+</head>
+
+<body>
+
+
+
+<table class="display" id="example">
+    <thead>
+        <tr>
+            <th>Information</th>
+            <th>Link</th>
+        </tr>
+    </thead>
+</table>
+
+
+
+  <!--引用jQuery核心-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <!--引用jquery dataTables.js-->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+  <script type="text/javascript">
+var dataSet = [
+    { "information": "A1", "weblink": "a1" },
+    { "information": "A2", "weblink": "a2" },
+    { "information": "A3", "weblink": "a3" },
+    { "information": "A4", "weblink": "a4" }
+];
+
+$('#example').dataTable({
+   "data": dataSet,
+   "bDestroy": true,
+   "deferRender": true,
+   "columns": [
+      { "data": "information" }, 
+      { 
+        "data": "weblink",
+        "render" : function(data, type, row, meta){
+            if(type === 'display'){
+                return $('<button style="background-color:red">')
+                    .text(data)
+                    .wrap('<div></div>')
+                    .parent()
+                    .html();
+            } else {
+                return data;
+            }
+        }
+      } 
+    ]
+});
+  </script>
+</body>
+
+</html>
+https://www.w3schools.com/howto/howto_css_icon_buttons.asp

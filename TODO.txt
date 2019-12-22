@@ -1,0 +1,7 @@
+將 coachSet 從 database read ==> done
+write coachSet to database ==> done
+add customer management - table and customerSet, read and write to datbase ==> done
+會員 報名課程 繳費，簽到
+
+
+Date input for addCourse ==> done

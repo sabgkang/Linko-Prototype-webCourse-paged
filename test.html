@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Kendo UI Snippet</title>
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.default-v2.min.css"/>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2019.3.1023/js/kendo.all.min.js"></script>
+    <script>
+      var cmdText = "bbb";
+    </script>
+</head>
+<body>
+  
+    <style>
+      .k-grid .k-grid-toolbar .k-grid-add,
+      .k-grid tbody .k-grid-edit,
+      .k-grid tbody .k-grid-update,
+      .k-grid tbody .k-grid-cancel,
+      .k-grid tbody .k-grid-delete {
+        min-width: 0;
+      }
+
+      .k-grid .k-grid-toolbar .k-grid-add .k-icon,
+      .k-grid tbody .k-grid-edit .k-icon,
+      .k-grid tbody .k-grid-update .k-icon,
+      .k-grid tbody .k-grid-cancel .k-icon,
+      .k-grid tbody .k-grid-delete .k-icon {
+        margin: 0;
+      }
+
+    </style>
+    <div id="example">
+      <div id="grid"></div>
+
+      <script>
+        $(document).ready(function () {
+          var crudServiceBaseUrl = "https://demos.telerik.com/kendo-ui/service",
+              dataSource = new kendo.data.DataSource({
+                transport: {
+                  read:  {
+                    url: crudServiceBaseUrl + "/Products",
+                    dataType: "jsonp"
+                  },
+                  update: {
+                    url: crudServiceBaseUrl + "/Products/Update",
+                    dataType: "jsonp"
+                  },
+                  destroy: {
+                    url: crudServiceBaseUrl + "/Products/Destroy",
+                    dataType: "jsonp"
+                  },
+                  create: {
+                    url: crudServiceBaseUrl + "/Products/Create",
+                    dataType: "jsonp"
+                  },
+                  parameterMap: function(options, operation) {
+                    if (operation !== "read" && options.models) {
+                      return {models: kendo.stringify(options.models)};
+                    }
+                  }
+                },
+                batch: true,
+                pageSize: 10,
+                schema: {
+                  model: {
+                    id: "ProductID",
+                    fields: {
+                      ProductID: { editable: false, nullable: true },
+                      ProductName: { validation: { required: true } }
+                    }
+                  }
+                }
+              });
+
+          var gridObj = $("#grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: true,
+            height: 500,
+            toolbar: [{name: "create", text: " "}],
+            columns: [
+              { field: "ProductName" },
+              { command: [
+                {className: "k-primary", text: cmdText},
+                {text: "aaa"}
+              ], title: "&nbsp;", width: "250px" }
+            ],
+            editable: "inline"
+          });
+        });
+
+      </script>
+    </div>
+</body>
+</html>
+
+
+https://www.telerik.com/forums/setting-classname-con-custom-command-put-css-class-on-wrong-element
+
+
+https://docs.telerik.com/kendo-ui/knowledge-base/grid-command-button-text-dataitem-property
+
+
+this --> var gridObj = $("#grid").kendoGrid
+
+https://stackoverflow.com/questions/42794104/how-do-i-reload-refresh-javascript-array-in-datatables

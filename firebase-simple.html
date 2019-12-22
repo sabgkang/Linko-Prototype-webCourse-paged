@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Untitled Document</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.common.min.css">
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.rtl.min.css">
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.default.min.css">
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.mobile.all.min.css">
+
+  <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+  <script src="https://kendo.cdn.telerik.com/2019.3.1023/js/kendo.all.min.js"></script>
+
+  <script>
+    var products = [{
+        productName: "Tea",
+        category: "Beverages"
+      },
+      {
+        productName: "Coffee",
+        category: "Beverages"
+      },
+      {
+        productName: "Water",
+        category: "Beverages"
+      },
+      {
+        productName: "Juice",
+        category: "Beverages"
+      },
+      {
+        productName: "Decaffeinated Coffee",
+        category: "Beverages"
+      },
+      {
+        productName: "Iced Tea",
+        category: "Beverages"
+      },
+      {
+        productName: "Ham",
+        category: "Food"
+      },
+      {
+        productName: "Bread",
+        category: "Food"
+      },
+      {
+        productName: "Eggs",
+        category: "Food"
+      },
+      {
+        productName: "Bacon",
+        category: "Food"
+      },
+      {
+        productName: "Chips",
+        category: "Food"
+      },
+      {
+        productName: "Fish",
+        category: "Food"
+      }
+    ]
+  </script>
+</head>
+
+<body>
+  <!-- The surrounding HTML is left untouched by FirebaseUI.
+     Your app may use that space for branding, controls and other customizations.-->
+  <h1>Welcome to My Awesome App</h1>
+  <div id="firebaseui-auth-container"></div>
+  <div id="loader">Loging...</div>
+
+  <button class="k-primary" onclick="myFunctionA()">SignIn A</button>
+  <button onclick="myFunctionB()">SignIn B</button>
+
+  <button onclick="myFunction()">UserID</button>
+  <button onclick="myFunction1()">SignOut</button>
+
+  <button onclick="myFunctionW()">Write Database</button>
+
+  <div style="height: 20px"></div>
+
+  <div id="example">
+    <div id="grid"></div>
+    <script>
+      $(document).ready(function() {
+        $("#grid").kendoGrid({
+          columns: [{
+              field: "productName"
+            },
+            {
+              field: "category"
+            },
+            {
+              command: [{
+                  text: "aaa"
+                },
+                {
+                  text: "bbb"
+                }
+              ],
+              //title: "&nbsp;",
+              //width: "250px"
+            }
+          ],
+          dataSource: {
+            data: products,
+            pageSize: 4
+          },
+          pageable: {
+            refresh: true,
+            pageSizes: true
+          }
+        });
+      });
+    </script>
+  </div>
+
+
+  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-app.js"></script>
+
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-analytics.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-firestore.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAhr69v1SCFW5mwzfv-qfMA6xL0IhKHNrc",
+      authDomain: "webchallenge-c16eb.firebaseapp.com",
+      databaseURL: "https://webchallenge-c16eb.firebaseio.com",
+      projectId: "webchallenge-c16eb",
+      storageBucket: "webchallenge-c16eb.appspot.com",
+      messagingSenderId: "372130663533",
+      appId: "1:372130663533:web:d73219272c0b4faf7f8364",
+      measurementId: "G-LZ3DN86LX1"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    var database = firebase.database();
+  </script>
+
+  <script>
+    firebase.auth().onAuthStateChanged(function(user) {
+      console.log(user);
+    });
+
+    document.getElementById("loader").innerHTML = "OK";
+  </script>
+
+  <script>
+    var i = 0;
+
+    function myFunctionA() {
+      firebase.auth().signInWithEmailAndPassword("aaa@test.com", "aaaaaa").catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        document.getElementById("loader").innerHTML = "Login Error";
+      });
+    }
+
+    function myFunctionB() {
+      firebase.auth().signInWithEmailAndPassword("bbb@test.com", "bbbbbb").catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        document.getElementById("loader").innerHTML = "Login Error";
+      });
+    }
+
+    function myFunction() {
+      var user = firebase.auth().currentUser;
+      console.log(user.uid);
+    }
+
+    function myFunction1() {
+      firebase.auth().signOut();
+      console.log("logout");
+
+      $("#grid").data("kendoGrid").dataSource.read();
+    }
+
+    function myFunctionW() {
+      var userId = firebase.auth().currentUser.uid;
+      console.log("Write Database" + userId);
+
+      database.ref('users/' + i.toString()).set({
+        userID: userId,
+        username: 'SABG KANG',
+        email: 'aaa@test.com',
+      });
+
+      i++;
+
+    }
+  </script>
+
+  <style type="text/css">
+    .customer-photo {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-size: 32px 35px;
+      background-position: center center;
+      vertical-align: middle;
+      line-height: 32px;
+      box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0, 0, 0, .2);
+      margin-left: 5px;
+    }
+
+    .customer-name {
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 32px;
+      padding-left: 3px;
+    }
+  </style>
+
+</body>
+
+</html>

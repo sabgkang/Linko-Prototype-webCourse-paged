@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      //  $("button").click(function(){
+      //    $("#test").hide();
+      //  });
+    });
+  </script>
+</head>
+
+<body>
+
+  <h2>This is a heading</h2>
+
+  <p>This is a paragraph.</p>
+  <p id="test">This is another paragraph.</p>
+
+  <button onclick="aaaFun()">Click me</button>
+
+  <script>
+    function aaaFun() {
+      $("#test").hide();
+      sendJSON();
+    }
+ 
+    function sendJSON() {
+    var data = {
+        "sqlCmd": "SELECT * FROM BikingTrainingResult WHERE distance >100"
+    };
+
+    var json = JSON.stringify(data);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://ugym3dbiking.azurewebsites.net/api/SQL_BikingTrainingResult?code=debug123");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(json);
+      
+    xhr.onreadystatechange = function() { 
+      // If the request completed, close the extension popup
+      if (xhr.readyState == 4)
+        if (xhr.status == 200)
+        var json_data = xhr.responseText;
+        console.log(json_data);
+    };      
+}
+  </script>
+
+</body>
+
+</html>
+http://127.0.0.1:49559
