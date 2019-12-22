@@ -22,9 +22,9 @@ function addCourse() {
 
 
   $("#inProgress").hide();
-  $("#addBtn").hide();
+  $("#addCourseBtn").hide();
   $("#refreshBtn").hide();
-  //      $("#addBtn").attr("disabled", true);
+  //      $("#addCourseBtn").attr("disabled", true);
   //      $("#refreshBtn").attr("disabled", true);
 }
 
@@ -82,9 +82,9 @@ function courseConfirm() {
   $('#courseHistory_paginate').show();
 
   $("#inProgress").show();
-  $("#addBtn").show();
+  $("#addCourseBtn").show();
   $("#refreshBtn").show();
-  //      $("#addBtn").attr("disabled", false);
+  //      $("#addCourseBtn").attr("disabled", false);
   //      $("#refreshBtn").attr("disabled", false);      
 }
 
@@ -102,9 +102,9 @@ function courseCancel() {
   $('#courseHistory_paginate').show();
 
   $("#inProgress").show();
-  $("#addBtn").show();
+  $("#addCourseBtn").show();
   $("#refreshBtn").show();
-  //      $("#addBtn").attr("disabled", false);
+  //      $("#addCourseBtn").attr("disabled", false);
   //      $("#refreshBtn").attr("disabled", false);       
 }
 
@@ -147,47 +147,52 @@ function backToHome() {
   $('#courseHistory_paginate').show();
   $("#addCourse").hide();
   $("#inProgress").show();
-  $("#addBtn").show();
+  $("#addCourseBtn").show();
   $("#refreshBtn").show();
 }
 
 function logInAndOut() {
+//  if (!isLogin) {
+//    $("#password").val("");
+//    $("#loginDiv").show();
+//  } else {
+//    firebase.auth().signOut();
+  console.log(isLogin);
   if (!isLogin) {
-    $("#password").val("");
-    $("#loginDiv").show();
+    window.location.href = '0-login.html';
   } else {
     firebase.auth().signOut();
-  }
+  }    
 }
 
-function signIn() {
-  //check email
-  if (!validateEmail($("#emailAddress").val())) {
-    $("#emailAddress").val("");
-    $("#emailAddress").attr("placeholder", "Email Address Error, try again!");
-    $("#emailAddress").css("background-color", "yellow");
-  } else {
-    $("#loginDiv").hide();
-    firebase.auth().signInWithEmailAndPassword($("#emailAddress").val(), $("#password").val()).catch(function (error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert("Login Error! Try again!")
-    });
-  }
+//function signIn() {
+//  //check email
+//  if (!validateEmail($("#emailAddress").val())) {
+//    $("#emailAddress").val("");
+//    $("#emailAddress").attr("placeholder", "Email Address Error, try again!");
+//    $("#emailAddress").css("background-color", "yellow");
+//  } else {
+//    $("#loginDiv").hide();
+//    firebase.auth().signInWithEmailAndPassword($("#emailAddress").val(), $("#password").val()).catch(function (error) {
+//      // Handle Errors here.
+//      var errorCode = error.code;
+//      var errorMessage = error.message;
+//      alert("Login Error! Try again!")
+//    });
+//  }
+//
+//}
 
-}
-
-function validateEmail(email) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-  return re.test(String(email).toLowerCase());
-}
-
-
-function signInAbort() {
-  $("#loginDiv").hide();
-}
+//function validateEmail(email) {
+//  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//
+//  return re.test(String(email).toLowerCase());
+//}
+//
+//
+//function signInAbort() {
+//  $("#loginDiv").hide();
+//}
 
 function addNewCoach() {
   console.log("Query and Check coach");
@@ -258,12 +263,14 @@ function memberManage() {
    alert("必須登入後才能進行客戶管理");
    return 0;
  } 
+ 
+window.location.href = '1-addMember.html';
   
-  $("#memberDiv").show();
-  var memberTable = $('#memberTable').DataTable();
-  memberTable.clear().draw();
-  memberTable.rows.add(memberData);
-  memberTable.draw();
+//  $("#memberDiv").show();
+//  var memberTable = $('#memberTable').DataTable();
+//  memberTable.clear().draw();
+//  memberTable.rows.add(memberData);
+//  memberTable.draw();
 }
 
 function closeMember()
@@ -323,11 +330,11 @@ function addMemberInfo (){
                                        
 
   // 更新課程表格  
-  var memberTable = $('#memberTable').DataTable();
-  memberTable.clear().draw();
-  memberTable.rows.add(memberData);
-  memberTable.draw();  
-  
-  $("#addMemberInfo").hide();
-  $("#memberDiv").show();  
+//  var memberTable = $('#memberTable').DataTable();
+//  memberTable.clear().draw();
+//  memberTable.rows.add(memberData);
+//  memberTable.draw();  
+//  
+//  $("#addMemberInfo").hide();
+//  $("#memberDiv").show();  
 }

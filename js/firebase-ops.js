@@ -25,12 +25,31 @@ firebase.auth().onAuthStateChanged(function (user) {
     $("#loginStatus").text("請登入來寫入資料庫");
     $("#logToggle").text("登入");
     isLogin = false;
+    $("#memberMangementBtn").attr("disabled", true);
+    $("#addCourseBtn").attr("disabled", true);
+    
+    //以下三行不知為何沒作用
+//    $("#courseDueBtn").attr("disabled", true);    
+//    $("#courseDetailBtn").attr("disabled", true);        
+//    $("#courseDeleteBtn").attr("disabled", true); 
+    
+//    var aaa = $('#courseTable').DataTable();
+//    console.log(aaa);
+//    aaa.buttons.disable();    
+    
   } else {
     // login
     console.log(user.email);
     $("#loginStatus").text("Hello " + user.email);
     $("#logToggle").text("登出");
     isLogin = true;
+    $("#memberMangementBtn").attr("disabled", false);
+    $("#addCourseBtn").attr("disabled", false);
+    
+    //以下三行不知為何沒作用    
+//    $("#courseDueBtn").attr("disabled", false);    
+//    $("#courseDetailBtn").attr("disabled", false);        
+//    $("#courseDeleteBtn").attr("disabled", false);     
   }
 });
 
@@ -108,10 +127,10 @@ function readMemberfromDB() {
     if (readTimes == toRead) $.loading.end();
     
     // 更新客戶表格
-    var memberTable = $('#memberTable').DataTable();
-    memberTable.clear().draw();
-    memberTable.rows.add(memberData);
-    memberTable.draw();
+//    var memberTable = $('#memberTable').DataTable();
+//    memberTable.clear().draw();
+//    memberTable.rows.add(memberData);
+//    memberTable.draw();
     
     
   });  

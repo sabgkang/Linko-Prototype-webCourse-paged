@@ -30,7 +30,7 @@
   <h1>林口運動中心 - 團體課程管理</h1>
   <hr>
   <h2 id="inProgress">進行中課程</h2>
-  <button class="btn-blue" id="addBtn" onclick="addCourse()"><i class="fa fa-plus"></i>&nbsp 新增課程</button>
+  <button class="btn-blue" id="addCourseBtn" onclick="addCourse()"><i class="fa fa-plus"></i>&nbsp 新增課程</button>
 
   <button class="btn-red" id="refreshBtn" onclick="refreshCourse()" style="margin-left: 20px"><i class="fa fa-refresh"></i>&nbsp 刷新課程</button>
 
@@ -293,7 +293,7 @@
         $('#courseHistory_paginate').hide();      
         $("#addCourse").hide();  
         $("#inProgress").hide();
-        $("#addBtn").hide();
+        $("#addCourseBtn").hide();
         $("#refreshBtn").hide();      
         
         $("#courseMemberTable_filter").css({"font-size": "16px"});
@@ -433,9 +433,9 @@
       $("#addCourse").show();
       
       $("#inProgress").hide();
-      $("#addBtn").hide();
+      $("#addCourseBtn").hide();
       $("#refreshBtn").hide();
-//      $("#addBtn").attr("disabled", true);
+//      $("#addCourseBtn").attr("disabled", true);
 //      $("#refreshBtn").attr("disabled", true);
     }
 
@@ -474,9 +474,9 @@
       $('#courseHistory_paginate').show();      
 
       $("#inProgress").show();      
-      $("#addBtn").show();
+      $("#addCourseBtn").show();
       $("#refreshBtn").show();      
-//      $("#addBtn").attr("disabled", false);
+//      $("#addCourseBtn").attr("disabled", false);
 //      $("#refreshBtn").attr("disabled", false);      
     }
 
@@ -494,9 +494,9 @@
       $('#courseHistory_paginate').show();            
   
       $("#inProgress").show();      
-      $("#addBtn").show();
+      $("#addCourseBtn").show();
       $("#refreshBtn").show();       
-//      $("#addBtn").attr("disabled", false);
+//      $("#addCourseBtn").attr("disabled", false);
 //      $("#refreshBtn").attr("disabled", false);       
     }
 
@@ -534,7 +534,7 @@
       $('#courseHistory_paginate').show();      
       $("#addCourse").hide();  
       $("#inProgress").show();
-      $("#addBtn").show();
+      $("#addCourseBtn").show();
       $("#refreshBtn").show();            
     }
     

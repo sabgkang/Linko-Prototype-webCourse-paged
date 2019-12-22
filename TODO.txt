@@ -1,7 +1,2 @@
-將 coachSet 從 database read ==> done
-write coachSet to database ==> done
-add customer management - table and customerSet, read and write to datbase ==> done
-會員 報名課程 繳費，簽到
-
-
-Date input for addCourse ==> done
+已將 login 分出到 0-login.html 完成 login 功能
+已將 客戶管理分出到 1-addMember.html，尚未完成功能

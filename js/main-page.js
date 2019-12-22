@@ -7,46 +7,46 @@ function initMainPage() {
   $("#memberDiv").hide();
   $("#addMemberInfo").hide();  
 
-  var memberTable = $('#memberTable').DataTable({
-    data: memberData,
-    pageLength: 10,
-    lengthChange: false,
-    deferRender: true,
-    columns: [{ //title: 姓名
-        className: "centerCell"
-              },
-      {
-        //title: LINE ID
-        className: "centerCell"
-              },
-      { //title: "姓別"
-        className: "centerCell"
-              },
-      {
-        //title: "年紀"
-        className: "centerCell"
-              },
-      {
-        //title: "電話"
-        className: "centerCell"
-              },
-      {
-        //title: "身分字號"
-        className: "centerCell"
-              },              
-      {
-        //title: "地址", 不對中，對左
-      
-              },
+//  var memberTable = $('#memberTable').DataTable({
+//    data: memberData,
+//    pageLength: 10,
+//    lengthChange: false,
+//    deferRender: true,
+//    columns: [{ //title: 姓名
+//        className: "centerCell"
+//              },
 //      {
-//        //title: "操作",
-//        data: null,
-//        defaultContent: "<button class = 'dueButton to-edit'>到期</button> " +
-//          "<button class = 'detailButton to-edit'>詳細</button> " +
-//          "<button class = 'deleteButton to-delete'>刪除</button>"
-//              }
-            ]
-  });  
+//        //title: LINE ID
+//        className: "centerCell"
+//              },
+//      { //title: "姓別"
+//        className: "centerCell"
+//              },
+//      {
+//        //title: "年紀"
+//        className: "centerCell"
+//              },
+//      {
+//        //title: "電話"
+//        className: "centerCell"
+//              },
+//      {
+//        //title: "身分字號"
+//        className: "centerCell"
+//              },              
+//      {
+//        //title: "地址", 不對中，對左
+//      
+//              },
+////      {
+////        //title: "操作",
+////        data: null,
+////        defaultContent: "<button class = 'dueButton to-edit'>到期</button> " +
+////          "<button class = 'detailButton to-edit'>詳細</button> " +
+////          "<button class = 'deleteButton to-delete'>刪除</button>"
+////              }
+//            ]
+//  });  
   
   var courseTable = $('#courseTable').DataTable({
     data: dataSet,
@@ -77,9 +77,9 @@ function initMainPage() {
       {
         //title: "操作",
         data: null,
-        defaultContent: "<button class = 'dueButton to-edit'>到期</button> " +
-          "<button class = 'detailButton to-edit'>詳細</button> " +
-          "<button class = 'deleteButton to-delete'>刪除</button>"
+        defaultContent: "<button id='courseDueBtn' class = 'dueButton to-edit'>到期</button> " +
+          "<button id='courseDetailBtn' class = 'detailButton to-edit'>詳細</button> " +
+          "<button id='courseDeleteBtn' class = 'deleteButton to-delete'>刪除</button>"
               }
             ]
   });
@@ -152,7 +152,7 @@ function initMainPage() {
     $('#courseHistory_paginate').hide();
     $("#addCourse").hide();
     $("#inProgress").hide();
-    $("#addBtn").hide();
+    $("#addCourseBtn").hide();
     $("#refreshBtn").hide();
 
     $("#courseMemberTable_filter").css({

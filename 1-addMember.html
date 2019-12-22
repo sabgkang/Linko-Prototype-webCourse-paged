@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>uGym login database</title>
+
+  <link rel="stylesheet" href="css/main.css">
+
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+  <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+  <link rel="stylesheet" href="css/loading.css" />
+  <script src="js/loading.js"></script>
+</head>
+
+<body>
+  <h1>客戶管理</h1>
+  <button class="btn-blue" id="closeMemberBtn" onclick="window.location.href = 'index.html';"><i class="fa fa-arrow-left"></i>&nbsp 回主畫面</button>
+  <button class="btn-blue" id="addMemberBtn" onclick="addMember()"><i class="fa fa-plus"></i>&nbsp 新增客戶</button>
+
+  <button class="btn-red" id="refreshMemberBtn" onclick="readMemberfromDB()" style="margin-left: 20px"><i class="fa fa-refresh"></i>&nbsp 刷新客戶</button>
+
+  <table id="memberTable" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
+    <thead>
+      <tr id="table-header">
+        <th style="width: 80px">姓名</th>
+        <th style="width: 80px">LINE ID</th>
+        <th style="width: 50px">性別</th>
+        <th style="width: 100px">生日</th>
+        <th style="width: 50px">電話</th>
+        <th style="width: 80px">身分字號</th>
+        <th>地址</th>
+        <!--        <th style="width: 150px">操作</th>        -->
+      </tr>
+    </thead>
+  </table>
+  </div>
+
+  <div id="addMemberInfo" style=" font-family:'Noto Sans TC'">
+    <h2 value="00">新增客戶</h2>
+    <div style="font-size: 20px;">
+      <div class="courseLabel">客戶姓名</div> <input id="newMemberName" class="courseInput" type="text" placeholder="請輸入客戶姓名"><br>
+      <div class="courseLabel">LINE Id</div> <input id="newMemberLINEId" class="courseInput" type="text" placeholder="請輸入LINE ID"><br>
+      <div class="courseLabel">性別</div>
+      <select id="newMemberGender" class="courseInput" name="newMemberGender" style="width: 413px;height: 38px">
+        <option value="男">男</option>
+        <option value="女">女</option>
+        <option value="其他">其他</option>
+        <option value="不透漏">不透漏</option>
+      </select><br>
+
+      <div class="courseLabel">生日</div> <input id="newMemberBirth" class="courseInput" type="text" placeholder="請輸入生日，例如 2019-01-01"><br>
+
+      <div class="courseLabel">電話</div> <input id="newMemberPhoneNum" class="courseInput" type="text" placeholder="請輸入電話"><br>
+
+      <div class="courseLabel">身分字號</div> <input id="newMemberIdNum" class="courseInput" type="text" placeholder="請輸入客戶身分字號"><br>
+
+      <div class="courseLabel">地址</div> <input id="newMemberAssress" class="courseInput" type="text" placeholder="請輸入客戶地址"><br>
+      <button class="btn-blue" onclick="addMemberInfo()">確定</button>
+      <button class="btn-red" onclick="closeAddMember()">取消</button>
+    </div>
+  </div>
+
+  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-app.js"></script>
+
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-analytics.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-firestore.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAhr69v1SCFW5mwzfv-qfMA6xL0IhKHNrc",
+      authDomain: "webchallenge-c16eb.firebaseapp.com",
+      databaseURL: "https://webchallenge-c16eb.firebaseio.com",
+      projectId: "webchallenge-c16eb",
+      storageBucket: "webchallenge-c16eb.appspot.com",
+      messagingSenderId: "372130663533",
+      appId: "1:372130663533:web:d73219272c0b4faf7f8364",
+      measurementId: "G-LZ3DN86LX1"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    var database = firebase.database();
+
+    var isLogin = false;
+    var memberData = [];
+
+    $.loading.start('Loading data');
+    firebase.database().ref('users/林口運動中心/客戶管理').once('value').then(function(snapshot) {
+      console.log("member read done");
+      var result = snapshot.val();
+      memberData = JSON.parse(result.會員資料);
+      $.loading.end();
+      buildMemberTable();
+    });
+
+
+
+    //======== Functions ===================//
+    function buildMemberTable() {
+      var memberTable = $('#memberTable').DataTable({
+        data: memberData,
+        pageLength: 10,
+        lengthChange: false,
+        deferRender: true,
+        columns: [{ //title: 姓名
+            className: "centerCell"
+          },
+          {
+            //title: LINE ID
+            className: "centerCell"
+          },
+          { //title: "姓別"
+            className: "centerCell"
+          },
+          {
+            //title: "年紀"
+            className: "centerCell"
+          },
+          {
+            //title: "電話"
+            className: "centerCell"
+          },
+          {
+            //title: "身分字號"
+            className: "centerCell"
+          },
+          {
+            //title: "地址", 不對中，對左
+
+          },
+          //      {
+          //        //title: "操作",
+          //        data: null,
+          //        defaultContent: "<button class = 'dueButton to-edit'>到期</button> " +
+          //          "<button class = 'detailButton to-edit'>詳細</button> " +
+          //          "<button class = 'deleteButton to-delete'>刪除</button>"
+          //              }
+        ]
+      });
+      $("#memberTable_filter").css("font-family", "Noto Sans TC");          
+      $("#memberTable_info").css("font-family", "Noto Sans TC");
+      $("#memberTable_paginate").css("font-family", "Noto Sans TC"); 
+    }
+
+
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      console.log(user);
+
+      if (user == null) {
+        // not login
+        console.log("no login");
+        $("#loginStatus").text("請登入來寫入資料庫");
+        $("#logToggle").text("登入");
+        isLogin = false;
+      } else {
+        // login
+        console.log(user.email);
+        $("#loginStatus").text("Hello " + user.email);
+        $("#logToggle").text("登出");
+        isLogin = true;
+      }
+    });
+
+    function signIn() {
+      //check email
+      if (!validateEmail($("#emailAddress").val())) {
+        $("#emailAddress").val("");
+        $("#emailAddress").attr("placeholder", "Email Address Error, try again!");
+        $("#emailAddress").css("background-color", "yellow");
+      } else {
+        firebase.auth().signInWithEmailAndPassword($("#emailAddress").val(), $("#password").val()).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          alert("Login Error! Try again!")
+        });
+      }
+
+    }
+
+    function backToMain() {
+      window.location.href = 'index.html';
+    }
+    
+    function readMemberfromDB() {
+      $.loading.start('Loading data');
+      firebase.database().ref('users/林口運動中心/客戶管理').once('value').then(function(snapshot) {
+        console.log("member read done");
+        var result = snapshot.val();
+        memberData = JSON.parse(result.會員資料);
+        $.loading.end();
+        
+        var memberTable = $('#memberTable').DataTable();
+        memberTable.clear().draw();
+        memberTable.rows.add(memberData);
+        memberTable.draw();      
+      });      
+    }    
+  </script>
+
+
+
+</body>
+
+</html>
