@@ -92,7 +92,7 @@ function initMainPage() {
       return 0;
     }    
 
-    var sueIt = false;
+    var dueIt = false;
     dueIt = confirm("確定要課程過期!無法回復!");
 
     if (dueIt) {

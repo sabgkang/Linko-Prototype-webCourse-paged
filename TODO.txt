@@ -1,2 +1,2 @@
 已將 login 分出到 0-login.html 完成 login 功能
-已將 客戶管理分出到 1-addMember.html，尚未完成功能
+1-addMember.html 尚須 報名課程 及取消課程
