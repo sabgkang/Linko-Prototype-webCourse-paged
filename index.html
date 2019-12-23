@@ -13,10 +13,11 @@
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+  
   <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
 
   <link rel="stylesheet" href="css/loading.css" />
   <script src="js/loading.js"></script>
@@ -223,7 +224,7 @@
 
   <div id="courseDetail" style="height: 600px; font-family:'Noto Sans TC'">
     <button class="btn-blue" onclick="backToHome()" style="float: left"><i class="fa fa-arrow-left"></i>&nbsp 回到 課程管理</button>
-    <h2 id="courseNumberDetail" value="00">簽到頁面</h2>
+    <h2 id="courseNumberDetail" style="margin-left: 200px" value="00">簽到頁面</h2>
     <div style="font-size: 20px;">
       <div class="courseLabelDetail">課程名稱</div> <input id="courseNameDetail" class="courseInputDetail" type="text" placeholder="請輸入課程名稱"><br>
 
@@ -231,7 +232,7 @@
 
       <div class="courseLabelDetail">助教姓名</div> <input id="assistNameDetail" class="courseInputDetail" type="text" placeholder="請輸入助教姓名"><br>
 
-      <div class="courseLabelDetail">上課時間</div> <input id="courseTimeDetail" class="courseInputDetail" type="datetime-local"><br>
+      <div class="courseLabelDetail">上課時間</div> <input id="courseTimeDetail" class="courseInputDetail" type="text"><br>
 
       <div class="courseLabelDetail">燃燒熱量</div> <input id="CaloriesDetail" class="courseInputDetail" type="text" placeholder="上課會燃燒的卡路里"><br>
 
@@ -246,7 +247,7 @@
       <button class="btn-red" onclick="courseUpdate()" disabled="disabled">更新 課程資料</button>
       <br>
 
-      <button class="btn-blue" onclick="" style="float: right; width: 168px; height: 30px;padding: 0px;margin-bottom: 10px" ><i class="fa fa-pen"></i>&nbsp 報名課程</button>     
+<!--      <button class="btn-blue" onclick="" style="float: right; width: 168px; height: 30px;padding: 0px;margin-bottom: 10px" ><i class="fa fa-pen"></i>&nbsp 報名課程</button>     -->
      
       <table id="courseMemberTable" class="display" style="width:100%;font-family:'Noto Sans TC'">
         <thead>
@@ -280,13 +281,15 @@
       <script src="js/firebase-ops.js"></script>
       
       <script>
-        var dataSet = [];
-        var dataSetHistory = [];
+        var courseData = [];
+        var courseHistory = [];
         var courseMemberSet = [];
         var coachSet = [];
         var memberData = [];
 
         readFromDB();
+        
+        window.name="";
       </script>      
       
       <!-- Main page init-->
@@ -307,8 +310,9 @@
         //        ];
         //
         //        var courseMember =[
-        //          ["U0001", ["謝小憲", "paid", "attend"], ["許小琦", "unpaid", "unattend"]],
-        //          ["U0002", ["許小琦", "paid", "unattend"], ["謝小憲", "unpaid", "unattend"]],     
+        //          ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],
+        //          ["U0002", ["許小琦", "已繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],   
+        //          ["U0003", ["盧小宏", "未繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],           
         //        ];
         //
         //        var courseMemberSet = [
@@ -316,13 +320,13 @@
         //        ];
         //
         //        [ID, Name, Coach, date/time, Calories, Max.Persons, Assist, Fee, OtherDesc]
-        //        var dataSet = [
+        //        var courseData = [
         //          ["U0002", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
         //            "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
         //          ],
         //        ];
         //
-        //        var dataSetHistory = [
+        //        var courseHistory = [
         //          ["U0001", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
         //            "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
         //          ],
@@ -332,18 +336,13 @@
         //          ["Chantal", "女", "愛跑馬拉松"],
         //        ];        
 
-        // 從 Firebase 資料庫取得 dataSet 和 dataSetHistory, 在 js/firebase-ops.js 中
+        // 從 Firebase 資料庫取得 courseData 和 courseHistory, 在 js/firebase-ops.js 中
         //readFromDB();
         
     
 
         $(document).ready(function() {
-          initMainPage(); // 在 js/main-page.js
-          
-//          $("#memberTable_filter").css("font-family", "Noto Sans TC");          
-//          $("#memberTable_info").css("font-family", "Noto Sans TC");
-//          $("#memberTable_paginate").css("font-family", "Noto Sans TC");             
-
+          initMainPage(); // 在 js/main-page.js       
         });
       </script>
       
@@ -393,7 +392,7 @@
             var bbb = snapshot.val();
             console.log(bbb);
             console.log(JSON.parse(bbb.現在課程));
-            dataSet = JSON.parse(bbb.現在課程);
+            courseData = JSON.parse(bbb.現在課程);
           });
 
         }
@@ -412,8 +411,8 @@
 //
 //          //database.ref('users/林口運動中心/'+userId+'/團課課程').set({
 //          database.ref('users/林口運動中心/團課課程').set({
-//            現在課程: JSON.stringify(dataSet),
-//            過去課程: JSON.stringify(dataSetHistory),
+//            現在課程: JSON.stringify(courseData),
+//            過去課程: JSON.stringify(courseHistory),
 //          }, function(error){
 //               if (error) {
 //                 //console.log(error);
@@ -428,15 +427,15 @@
 //           });
 //
 //
-          database.ref('users/林口運動中心/客戶管理').set({
-            會員資料: JSON.stringify(memberData),
-
-          });
-
-//          database.ref('users/林口運動中心/課程管理').set({
-//            課程會員: JSON.stringify(courseMember),
+//          database.ref('users/林口運動中心/客戶管理').set({
+//            會員資料: JSON.stringify(memberData),
 //
 //          });
+
+          database.ref('users/林口運動中心/課程管理').set({
+            課程會員: JSON.stringify(courseMember),
+
+          });
                     
 
           i++;

@@ -48,19 +48,19 @@ function courseConfirm() {
             $("#otherDesc").val(),
           ];
 
-  // 更新 local dataSet
-  dataSet.push(dataToAdd);
+  // 更新 local courseData
+  courseData.push(dataToAdd);
 
 
   
   // 課程寫入資料庫
   database.ref('users/林口運動中心/團課課程').set({
-    現在課程: JSON.stringify(dataSet),
-    過去課程: JSON.stringify(dataSetHistory),
+    現在課程: JSON.stringify(courseData),
+    過去課程: JSON.stringify(courseHistory),
   }, function(error){
       if (error) {
-        console.log("Write to database error, revert dataSet back");
-        dataSet.pop();
+        console.log("Write to database error, revert courseData back");
+        courseData.pop();
       }
         console.log('Write to database successful');
   });
@@ -68,7 +68,7 @@ function courseConfirm() {
   // 更新課程表格
   var courseTable = $('#courseTable').DataTable();
   courseTable.clear().draw();
-  courseTable.rows.add(dataSet);
+  courseTable.rows.add(courseData);
   courseTable.draw();
 
   $("#addCourse").hide();
@@ -123,12 +123,12 @@ function refreshCourse() {
 
   var courseTable = $('#courseTable').DataTable();
   courseTable.clear().draw();
-  courseTable.rows.add(dataSet);
+  courseTable.rows.add(courseData);
   courseTable.draw();
 
   var courseTable = $('#courseHistory').DataTable();
   courseTable.clear().draw();
-  courseTable.rows.add(dataSetHistory);
+  courseTable.rows.add(courseHistory);
   courseTable.draw();
 }
 
@@ -236,7 +236,7 @@ function addCoachInfo() {
     $("#newCoachOthers").val(),
   ];
 
-  // 更新 local dataSet
+  // 更新 local courseData
   coachSet.push(dataToAdd);
   
   // update database  
@@ -313,7 +313,7 @@ function addMemberInfo (){
 
   //console.log(dataToAdd);
   
-  // 更新 local dataSet
+  // 更新 local courseData
   memberData.push(dataToAdd);
 
   
@@ -323,7 +323,7 @@ function addMemberInfo (){
   }, function(error){
       if (error) {
         console.log("Write to database error");
-        dataSet.pop();
+        courseData.pop();
       }
         console.log('Write to database successful'); 
   });

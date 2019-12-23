@@ -64,12 +64,12 @@ function readFromDB() {
     console.log("data read done");
     readTimes++;
     var result = snapshot.val();
-    dataSet = JSON.parse(result.現在課程);
-    dataSetHistory = JSON.parse(result.過去課程);
+    courseData = JSON.parse(result.現在課程);
+    courseHistory = JSON.parse(result.過去課程);
 
-    var tmp1 = dataSet[dataSet.length - 1][0];
+    var tmp1 = courseData[courseData.length - 1][0];
     var tmp2 = parseInt(tmp1.substr(1, 4));
-    var tmp3 = dataSetHistory[dataSetHistory.length - 1][0];
+    var tmp3 = courseHistory[courseHistory.length - 1][0];
     var tmp4 = parseInt(tmp3.substr(1, 4));   
  
     //console.log(tmp4, tmp2);

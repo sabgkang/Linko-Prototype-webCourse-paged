@@ -49,7 +49,7 @@ function initMainPage() {
 //  });  
   
   var courseTable = $('#courseTable').DataTable({
-    data: dataSet,
+    data: courseData,
     pageLength: 8,
     lengthChange: false,
     deferRender: true,
@@ -99,23 +99,23 @@ function initMainPage() {
       var data = courseTable.row($(this).parents('tr')).data();
       console.log("delete:" + data[0]);
 
-      dataSetHistory.push(data);
+      courseHistory.push(data);
 
-      dataSet = dataSet.filter(function (value, index, arr) {
+      courseData = courseData.filter(function (value, index, arr) {
         return value[0] != data[0];
       });
 
       // 更新 courseNum
-      var tmp1 = dataSet[dataSet.length - 1][0];
-      var tmp2 = parseInt(tmp1.substr(1, 4));
-      var tmp3 = dataSetHistory[dataSetHistory.length - 1][0];
+      var tmp2 = courseData[courseData.length - 1][0];
+      var tmp2 = parseInt(tmp2.substr(1, 4));
+      var tmp3 = courseHistory[courseHistory.length - 1][0];
       var tmp4 = parseInt(tmp3.substr(1, 4));   
       courseNum = (tmp4 > tmp2)? tmp4:tmp2;    
 
       // TODO: 更新 database
       database.ref('users/林口運動中心/團課課程').set({
-        現在課程: JSON.stringify(dataSet),
-        過去課程: JSON.stringify(dataSetHistory),
+        現在課程: JSON.stringify(courseData),
+        過去課程: JSON.stringify(courseHistory),
       }, function(error){
             if (error) {
               //console.log(error);
@@ -125,11 +125,11 @@ function initMainPage() {
       });      
       
       courseTable.clear().draw();
-      courseTable.rows.add(dataSet);
+      courseTable.rows.add(courseData);
       courseTable.draw();
 
       courseHistory.clear().draw();
-      courseHistory.rows.add(dataSetHistory);
+      courseHistory.rows.add(courseHistory);
       courseHistory.draw();
     }
 
@@ -183,18 +183,25 @@ function initMainPage() {
       if (item[0] == data[0]) {
         item.shift();
 
+        var tmp1=[];
         item.forEach(function (item1, index, array) {
-          //console.log(item1);
-          //console.log(item1[1]);
-          var addData = [];
           memberData.forEach(function (item2, index, array) {
             if (item1[0] == item2[0]) {
-              addData = item2;
+              tmp1 = item2;
             };
           });
-          addData.push(item1[1], item1[2]);
-          console.log(addData);
-          courseMemberSet.push(addData);
+          
+          // Convert 
+          var dataToAdd  = tmp1.slice(0,2);
+          var tmp2 = tmp1.slice(4,7);
+          tmp2.forEach( function(obj, idx, array){
+            dataToAdd.push(obj);
+          })
+        
+          dataToAdd.push(item1[1], item1[2]);
+          //console.log("bbbbb", dataToAdd);
+          
+          courseMemberSet.push(dataToAdd);
         });
 
         item.unshift(data[0]);
@@ -223,21 +230,21 @@ function initMainPage() {
 
     if (deleteIt) {
       //console.log("dddd");
-      dataSet = dataSet.filter(function (value, index, arr) {
+      courseData = courseData.filter(function (value, index, arr) {
         return value[0] != data[0];
       });
 
       // 更新 courseNum
-      var tmp1 = dataSet[dataSet.length - 1][0];
-      var tmp2 = parseInt(tmp1.substr(1, 4));
-      var tmp3 = dataSetHistory[dataSetHistory.length - 1][0];
+      var tmp2 = courseData[courseData.length - 1][0];
+      var tmp2 = parseInt(tmp2.substr(1, 4));
+      var tmp3 = courseHistory[courseHistory.length - 1][0];
       var tmp4 = parseInt(tmp3.substr(1, 4));   
       courseNum = (tmp4 > tmp2)? tmp4:tmp2;   
       
       // TODO: 更新 database
       database.ref('users/林口運動中心/團課課程').set({
-        現在課程: JSON.stringify(dataSet),
-        過去課程: JSON.stringify(dataSetHistory),
+        現在課程: JSON.stringify(courseData),
+        過去課程: JSON.stringify(courseHistory),
       }, function(error){
             if (error) {
               //console.log(error);
@@ -247,15 +254,15 @@ function initMainPage() {
       });
             
       console.log(deleteIt);
-      console.log(dataSet);
+      console.log(courseData);
       courseTable.clear().draw();
-      courseTable.rows.add(dataSet);
+      courseTable.rows.add(courseData);
       courseTable.draw();
     }
   });
 
   var courseHistory = $('#courseHistory').DataTable({
-    data: dataSetHistory,
+    data: courseHistory,
     pageLength: 8,
     deferRender: true,
     lengthChange: false,

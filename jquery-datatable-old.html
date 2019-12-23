@@ -173,15 +173,15 @@
       ["謝東憲", "Jacky", "09XXXXXXXX", "A1XXXXXXXX", "台北市總統府", "YES"],
     ];
     
-    // TODO: 用讀取 database 取代以下 hard coded 的 dataSet
+    // TODO: 用讀取 database 取代以下 hard coded 的 courseData
     // [ID, Name, Coach, date/time, Calories, Max.Persons,
     //  Assist, Fee, OtherDesc]
-    var dataSet = [
+    var courseData = [
       ["U0002", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30", 
        "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"],
     ];
       
-    var dataSetHistory = [
+    var courseHistory = [
       ["U0001", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30", 
        "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"],
     ]; 
@@ -192,7 +192,7 @@
       $("#courseDetail").hide();
       
       var courseTable = $('#courseTable').DataTable({
-        data: dataSet,
+        data: courseData,
         pageLength: 8,
         lengthChange: false,
         deferRender: true,
@@ -258,19 +258,19 @@
           var data = courseTable.row($(this).parents('tr')).data();
           console.log("delete:" + data[0]);
           
-          dataSetHistory.push(data);
+          courseHistory.push(data);
           
-          dataSet = dataSet.filter(function(value, index, arr) {
+          courseData = courseData.filter(function(value, index, arr) {
             return value[0] != data[0];
           }); 
 
           // TODO: 更新 database
           courseTable.clear().draw();
-          courseTable.rows.add(dataSet);
+          courseTable.rows.add(courseData);
           courseTable.draw();        
           
           courseHistory.clear().draw();
-          courseHistory.rows.add(dataSetHistory);
+          courseHistory.rows.add(courseHistory);
           courseHistory.draw();           
         }
 
@@ -328,7 +328,7 @@
 
         if (deleteIt) {
           //console.log("dddd");
-          dataSet = dataSet.filter(function(value, index, arr) {
+          courseData = courseData.filter(function(value, index, arr) {
             return value[0] != data[0];
           });
 
@@ -336,15 +336,15 @@
         
           // TODO: 更新 database
           console.log(deleteIt);
-          console.log(dataSet);
+          console.log(courseData);
           courseTable.clear().draw();
-          courseTable.rows.add(dataSet);
+          courseTable.rows.add(courseData);
           courseTable.draw();
         }
       });
 
       var courseHistory = $('#courseHistory').DataTable({
-        data: dataSetHistory,
+        data: courseHistory,
         pageLength: 8,
         deferRender: true,
         lengthChange: false,
@@ -456,11 +456,11 @@
         $("#otherDesc").val(),        
       ];
 
-      dataSet.push(dataToAdd);
+      courseData.push(dataToAdd);
 
       var courseTable = $('#courseTable').DataTable();
       courseTable.clear().draw();
-      courseTable.rows.add(dataSet);
+      courseTable.rows.add(courseData);
       courseTable.draw();
 
       $("#addCourse").hide();
@@ -515,7 +515,7 @@
       
       var courseTable = $('#courseTable').DataTable();
       courseTable.clear().draw();
-      courseTable.rows.add(dataSet);
+      courseTable.rows.add(courseData);
       courseTable.draw();
     }
 
@@ -565,7 +565,7 @@
       //      var data = courseTable.rows( rows ).data();
       //      console.log(data[0]);
 
-      //      var newDataSet = dataSet.filter(function(value, index, arr){
+      //      var newDataSet = courseData.filter(function(value, index, arr){
       //        return value[0] != selected;
       //      });
       //      console.log(newDataSet);

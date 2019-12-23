@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>uGym login database</title>
+  <title>uGym 客戶管理</title>
 
   <link rel="stylesheet" href="css/main.css">
 
@@ -22,30 +22,37 @@
 </head>
 
 <body>
-  <h1>客戶管理</h1>
-  <button class="btn-blue" id="closeMemberBtn" onclick="window.location.href = 'index.html';"><i class="fa fa-arrow-left"></i>&nbsp 回主畫面</button>
-  <button class="btn-blue" id="addMemberBtn" onclick="addMember()"><i class="fa fa-plus"></i>&nbsp 新增客戶</button>
 
-  <button class="btn-red" id="refreshMemberBtn" onclick="readMemberfromDB()" style="margin-left: 20px"><i class="fa fa-refresh"></i>&nbsp 刷新客戶</button>
+  <!--  ==================== 客戶列表 (HTML)=============================-->
+  <div id="memberDiv">
+    <h1>客戶管理</h1>
+    <hr>
+    <button class="btn-blue" id="closeMemberBtn" onclick="window.location.href = 'index.html';"><i class="fa fa-arrow-left"></i>&nbsp 回主畫面</button>
+    <button class="btn-blue" id="addMemberBtn" onclick="addMember()"><i class="fa fa-plus"></i>&nbsp 新增客戶</button>
 
-  <table id="memberTable" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
-    <thead>
-      <tr id="table-header">
-        <th style="width: 80px">姓名</th>
-        <th style="width: 80px">LINE ID</th>
-        <th style="width: 50px">性別</th>
-        <th style="width: 100px">生日</th>
-        <th style="width: 50px">電話</th>
-        <th style="width: 80px">身分字號</th>
-        <th>地址</th>
-        <!--        <th style="width: 150px">操作</th>        -->
-      </tr>
-    </thead>
-  </table>
+    <button class="btn-red" id="refreshMemberBtn" onclick="readMemberfromDB()" style="margin-left: 20px"><i class="fa fa-refresh"></i>&nbsp 刷新客戶</button>
+
+    <table id="memberTable" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
+      <thead>
+        <tr id="table-header">
+          <th style="width: 80px">姓名</th>
+          <th style="width: 80px">LINE ID</th>
+          <th style="width: 50px">性別</th>
+          <th style="width: 100px">生日</th>
+          <th style="width: 50px">電話</th>
+          <th style="width: 80px">身分字號</th>
+          <th>地址</th>
+          <th style="width: 200px">操作</th>
+        </tr>
+      </thead>
+    </table>
   </div>
+  <!--  ==================== 客戶列表 (HTML)=============================-->
 
+  <!--  ==================== 新增客戶 (HTML)=============================-->
   <div id="addMemberInfo" style=" font-family:'Noto Sans TC'">
     <h2 value="00">新增客戶</h2>
+    <hr>
     <div style="font-size: 20px;">
       <div class="courseLabel">客戶姓名</div> <input id="newMemberName" class="courseInput" type="text" placeholder="請輸入客戶姓名"><br>
       <div class="courseLabel">LINE Id</div> <input id="newMemberLINEId" class="courseInput" type="text" placeholder="請輸入LINE ID"><br>
@@ -68,6 +75,53 @@
       <button class="btn-red" onclick="closeAddMember()">取消</button>
     </div>
   </div>
+  <!--  ==================== 新增客戶 (HTML)=============================-->
+
+  <!--  ==================== 客戶已報名課程 (HTML)========================-->
+  <div id="myCourseDiv">
+    <h1 id="客戶已報名課程">已報名課程管理</h1>
+    <hr>
+    <div id="myCourses">
+      <button class="btn-blue" id="addMemberBtn" onclick="closeMyCourses()">返回</button>
+
+      <table id="myCoursesTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
+        <thead>
+          <tr id="table-header">
+            <th style="width: 120px">現在課程編號</th>
+            <th>課程名稱</th>
+            <th style="width: 200px">老師</th>
+            <th style="width: 120px">時間</th>
+            <th style="width: 70px">卡路里燃燒</th>
+            <th style="width: 50px">課程人數</th>
+            <th style="width: 150px">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div style="height: 100px"></div>
+      <hr>
+       <table id="myCoursesHistory" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
+        <thead>
+          <tr id="table-header">
+            <th style="width: 120px">歷史課程編號</th>
+            <th>課程名稱</th>
+            <th style="width: 200px">老師</th>
+            <th style="width: 120px">時間</th>
+            <th style="width: 70px">卡路里燃燒</th>
+            <th style="width: 50px">課程人數</th>
+            <th style="width: 150px">操作</th>
+          </tr>
+        </thead>
+      </table>
+           
+    </div>  
+  </div>
+
+    
+  <!--  ==================== 客戶已報名課程 (HTML)========================-->
+
+  <!--  ==================== 參加課程 (HTML)=============================-->
+  <!--  ==================== 參加課程 (HTML)=============================-->
+
 
   <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 
@@ -102,19 +156,72 @@
 
     var isLogin = false;
     var memberData = [];
+    var myCoursesData = [];
+    var myCoursesHistory = [];    
+    var courseData=[];
+    var courseHistory=[];
+
+    // Monitoring AuthState
+    firebase.auth().onAuthStateChanged(function(user) {
+      console.log(user);
+
+      if (user == null) {
+        // not login
+        console.log("no login");
+        $("#loginStatus").text("請登入來寫入資料庫");
+        $("#logToggle").text("登入");
+        isLogin = false;
+      } else {
+        // login
+        console.log(user.email);
+        $("#loginStatus").text("Hello " + user.email);
+        $("#logToggle").text("登出");
+        isLogin = true;
+      }
+    });
+
+    var readTimes = 0;
+    var toRead = 3;
+
+    firebase.database().ref('users/林口運動中心/團課課程').once('value').then(function(snapshot) {
+      console.log("data read done");
+      readTimes++;
+      var result = snapshot.val();
+      courseData = JSON.parse(result.現在課程);
+      courseHistory = JSON.parse(result.過去課程);
+
+      if (readTimes == toRead) $.loading.end();
+    });
 
     $.loading.start('Loading data');
+    firebase.database().ref('users/林口運動中心/課程管理').once('value').then(function(snapshot) {
+      console.log("class read done");
+      readTimes++;
+      var result = snapshot.val();
+      courseMember = JSON.parse(result.課程會員);
+      if (readTimes == toRead) $.loading.end();
+    });
+
+    // Read memberData from the database
     firebase.database().ref('users/林口運動中心/客戶管理').once('value').then(function(snapshot) {
       console.log("member read done");
+      readTimes++;
       var result = snapshot.val();
       memberData = JSON.parse(result.會員資料);
-      $.loading.end();
-      buildMemberTable();
+      if (readTimes == toRead) {
+        $.loading.end();
+        buildMemberTable();
+      }
     });
 
 
+    $("#addMemberInfo").hide();
+    $("#myCourseDiv").hide();
+
+    buildMyCoursesTable();
 
     //======== Functions ===================//
+
     function buildMemberTable() {
       var memberTable = $('#memberTable').DataTable({
         data: memberData,
@@ -147,39 +254,170 @@
             //title: "地址", 不對中，對左
 
           },
-          //      {
-          //        //title: "操作",
-          //        data: null,
-          //        defaultContent: "<button class = 'dueButton to-edit'>到期</button> " +
-          //          "<button class = 'detailButton to-edit'>詳細</button> " +
-          //          "<button class = 'deleteButton to-delete'>刪除</button>"
-          //              }
+          {
+            //title: "操作",
+            data: null,
+            defaultContent: "<button class = 'checkAttendBtn to-edit' style='width: 100px'>已報名課程</button> " +
+              "<button class = 'attendBtn to-edit' style='width: 100px'>參加課程</button> "
+          }
         ]
       });
-      $("#memberTable_filter").css("font-family", "Noto Sans TC");          
+
+      $("#memberTable_filter").css("font-family", "Noto Sans TC");
       $("#memberTable_info").css("font-family", "Noto Sans TC");
-      $("#memberTable_paginate").css("font-family", "Noto Sans TC"); 
+      $("#memberTable_paginate").css("font-family", "Noto Sans TC");
+
+      // ============ Function for checkAttendBtn ==================================================
+      $('#memberTable tbody').on('click', '.checkAttendBtn', function() {
+        console.log("checkAttendBtn is clicked");
+
+      $("#myCourseDiv").show();        
+      $("#memberDiv").hide();
+
+        
+        var data = memberTable.row($(this).parents('tr')).data();
+        var userName = data[0];
+        
+        $("#客戶已報名課程").text(data[0]+" - 已報名課程");
+
+        var myCoursNumbers = [];
+        courseMember.forEach(function(item, index, array) {
+          //console.log(item[1][0]);
+          var itemLength = item.length;
+          for (var i = 0; i < itemLength; i++) {
+            //console.log(i, item[i][0]);
+            if (item[i][0] == userName) {
+              myCoursNumbers.push(item[0]);
+            };
+          }
+        });
+
+        //console.log(myCoursNumbers);
+
+        myCoursesData=[];
+        courseData.forEach(function(course, index, array){
+          //console.log(course);
+          
+          myCoursNumbers.forEach(function(attended, index, array){
+            if (attended == course[0]) {
+              //console.log("match", attended);
+              myCoursesData.push(course);
+            }
+          });
+        });   
+        
+        myCoursesHistory=[];       
+        courseHistory.forEach(function(course, index, array){
+          //console.log(course);
+          
+          myCoursNumbers.forEach(function(attended, index, array){
+            if (attended == course[0]) {
+              //console.log("match", attended);
+              myCoursesHistory.push(course);
+            }
+          });
+        });
+                
+       
+        var table = $('#myCoursesTable').DataTable();
+        table.clear();   
+        table.rows.add(myCoursesData);
+        table.draw();         
+        
+        var table = $('#myCoursesHistory').DataTable();
+        table.clear();
+        table.rows.add(myCoursesHistory);
+        table.draw(); 
+       
+
+      });
+      
+      
+
+      $('#memberTable tbody').on('click', '.attendBtn', function() {
+        console.log("attendBtn is clicked");
+      });
     }
 
+    function buildMyCoursesTable() {
+      var myCoursesTable = $('#myCoursesTable').DataTable({
+        data: myCoursesData,
+        order: false,
+        pageLength: 10,
+        lengthChange: false,
+        deferRender: true,
+        columns: [{ //title: 課程編號
+            className: "centerCell"
+          },
+          {
+            //title: 課程名稱
+          },
+          { //title: "老師"
+            className: "centerCell"
+          },
+          {
+            //title: "時間"
+            className: "centerCell"
+          },
+          {
+            //title: "卡路里燃燒"
+            className: "centerCell"
+          },
+          {
+            //title: "課程人數"
+            className: "centerCell"
+          },
+          {
+            //title: "操作",
+            data: null,
+            defaultContent: "<button class = 'checkAttendBtn to-edit' style='width: 100px'>取消</button> "
+          }
+        ]
+      });
 
+      $("#myCoursesTable_filter").css("font-family", "Noto Sans TC");
+      $("#myCoursesTable_info").css("font-family", "Noto Sans TC");
+      $("#myCoursesTable_paginate").css("font-family", "Noto Sans TC");
+      
+      var myCoursesHistory = $('#myCoursesHistory').DataTable({
+        data: myCoursesHistory,
+        order: false,
+        pageLength: 10,
+        lengthChange: false,
+        deferRender: true,
+        columns: [{ //title: 課程編號
+            className: "centerCell"
+          },
+          {
+            //title: 課程名稱
+          },
+          { //title: "老師"
+            className: "centerCell"
+          },
+          {
+            //title: "時間"
+            className: "centerCell"
+          },
+          {
+            //title: "卡路里燃燒"
+            className: "centerCell"
+          },
+          {
+            //title: "課程人數"
+            className: "centerCell"
+          },
+          {
+            //title: "操作",
+            data: null,
+            defaultContent:  "<button class = 'checkAttendBtn to-edit' style='width: 100px'>取消</button> "
+          }
+        ]
+      });
 
-    firebase.auth().onAuthStateChanged(function(user) {
-      console.log(user);
-
-      if (user == null) {
-        // not login
-        console.log("no login");
-        $("#loginStatus").text("請登入來寫入資料庫");
-        $("#logToggle").text("登入");
-        isLogin = false;
-      } else {
-        // login
-        console.log(user.email);
-        $("#loginStatus").text("Hello " + user.email);
-        $("#logToggle").text("登出");
-        isLogin = true;
-      }
-    });
+      $("#myCoursesHistory_filter").css("font-family", "Noto Sans TC");
+      $("#myCoursesHistory_info").css("font-family", "Noto Sans TC");
+      $("#myCoursesHistory_paginate").css("font-family", "Noto Sans TC");           
+    }
 
     function signIn() {
       //check email
@@ -201,7 +439,7 @@
     function backToMain() {
       window.location.href = 'index.html';
     }
-    
+
     function readMemberfromDB() {
       $.loading.start('Loading data');
       firebase.database().ref('users/林口運動中心/客戶管理').once('value').then(function(snapshot) {
@@ -209,13 +447,68 @@
         var result = snapshot.val();
         memberData = JSON.parse(result.會員資料);
         $.loading.end();
-        
+
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
         memberTable.rows.add(memberData);
-        memberTable.draw();      
-      });      
-    }    
+        memberTable.draw();
+      });
+    }
+
+    function addMember() {
+      $("#memberDiv").hide();
+      $("#addMemberInfo").show();
+    }
+
+
+    function addMemberInfo() {
+
+      var dataToAdd = [
+        $("#newMemberName").val(),
+        $("#newMemberLINEId").val(),
+        $("#newMemberGender").val(),
+        $("#newMemberBirth").val(),
+        $("#newMemberPhoneNum").val(),
+        $("#newMemberIdNum").val(),
+        $("#newMemberAssress").val(),
+      ];
+
+
+      // 更新 local courseData
+      memberData.push(dataToAdd);
+
+      // 將新客戶寫入資料庫
+      database.ref('users/林口運動中心/客戶管理').set({
+        會員資料: JSON.stringify(memberData),
+      }, function(error) {
+        if (error) {
+          console.log("Write to database error, revert courseData back");
+          courseData.pop();
+        }
+        console.log('Write to database successful');
+      });
+
+      var table = $('#memberTable').DataTable();
+      table.clear().draw();
+      table.rows.add(memberData);
+      table.draw();
+
+      $("#addMemberInfo").hide();
+      $("#memberList").show();
+
+    }
+
+    function closeAddMember() {
+      $("#addMemberInfo").hide();
+      $("#memberDiv").show();
+    }
+
+
+    function closeMyCourses() {
+      console.log("close myCourses");
+      $("#myCourseDiv").hide();
+      $("#memberDiv").show();      
+    }
   </script>
 
 
