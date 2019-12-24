@@ -360,9 +360,11 @@
       // ============ Function for attendBtn ================================================== 
       $('#memberTable tbody').on('click', '.attendBtn', function() {
         console.log("attendBtn is clicked - not implemented yet");
-        
+
         var data = memberTable.row($(this).parents('tr')).data();
         userForAddingCourse = data[0];
+                
+        $("#報名課程").text(userForAddingCourse + " - 報名課程");
         console.log(userForAddingCourse);
 
         $("#memberDiv").hide();
@@ -523,31 +525,43 @@
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'selectBtn to-edit' style='width: 100px'>選擇</button> "
+            defaultContent: "<button class = 'selectBtn to-edit' style='width: 100px'>報名</button> "
           }
         ]
       });
 
-      // ============ Function for attendBtn ================================================== 
+      // ============ Function for selectBtn ================================================== 
       $('#coursesTable tbody').on('click', '.selectBtn', function() {
         console.log("selectBtn is clicked - not implemented yet");
         
         var coursesTable = $('#coursesTable').DataTable();
         var data = coursesTable.row($(this).parents('tr')).data();
         var courseName = data[0];
-
+        var courseIdx = -1;
+        var alreadyInCourse = false;
+        // 檢查是否已報過名
         courseMember.forEach(function(course, index, array){
           if (course[0]==courseName) {
+            courseIdx = index;
             for (var i=0; i< course.length; i++) {
-              console.log(course[i][0]);
+              //console.log(course[i][0]);
               if (course[i][0]==userForAddingCourse) {
-                alert("已經報過名了")
+                alert("已經報過名了");
+                alreadyInCourse = true;
+                return(0); //只跳出 forEach 迴圈
               }
             };
           }
         })
         
-        下次從這裡開始
+        console.log(courseIdx);
+        
+        if(!alreadyInCourse) {
+          courseMember[courseIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
+        }
+        
+        //TODO:  Write courseMember to database
+        
         //console.log(courseName);
         //console.log(userForAddingCourse);
         
@@ -657,8 +671,15 @@
       $("#myCourseDiv").hide();
       $("#memberDiv").show();
     }
+    
+    function returnFromCourses() {
+      console.log("returnFromCourses");
+      $("#courseDiv").hide();   
+      $("#memberDiv").show();
+           
+    }
+    
   </script>
-
 
 
 </body>

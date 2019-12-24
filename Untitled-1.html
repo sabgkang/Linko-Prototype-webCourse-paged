@@ -1,67 +1,31 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <title>Client Side 完整 排序、分頁、查詢(DataSource使用Ajax)
-    展示資料行加入checkbox、button、Hyperlink
-  </title>
-  <!--引用dataTables.css-->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+  <meta charset="UTF-8">
+  <title>Untitled Document</title>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
 
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="jquery.twzipcode.min.js"></script>
 
+  <!-- Normal -->
+  <div id="twzipcode"></div>
 
-<table class="display" id="example">
-    <thead>
-        <tr>
-            <th>Information</th>
-            <th>Link</th>
-        </tr>
-    </thead>
-</table>
+  <!-- OR HTML5 data-* (Version 1.5+) -->
 
+  <div id="twzipcode">
+    <div data-role="county" data-style="Style Name" data-value="110"></div>
+    <div data-role="district" data-style="Style Name" data-value="臺北市"></div>
+    <div data-role="zipcode" data-style="Style Name" data-value="信義區"></div>
+  </div>
 
-
-  <!--引用jQuery核心-->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-  <!--引用jquery dataTables.js-->
-  <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
-  <script type="text/javascript">
-var courseData = [
-    { "information": "A1", "weblink": "a1" },
-    { "information": "A2", "weblink": "a2" },
-    { "information": "A3", "weblink": "a3" },
-    { "information": "A4", "weblink": "a4" }
-];
-
-$('#example').dataTable({
-   "data": courseData,
-   "bDestroy": true,
-   "deferRender": true,
-   "columns": [
-      { "data": "information" }, 
-      { 
-        "data": "weblink",
-        "render" : function(data, type, row, meta){
-            if(type === 'display'){
-                return $('<button style="background-color:red">')
-                    .text(data)
-                    .wrap('<div></div>')
-                    .parent()
-                    .html();
-            } else {
-                return data;
-            }
-        }
-      } 
-    ]
-});
+  <script>
+    $('#twzipcode').twzipcode();
   </script>
 </body>
 
 </html>
-https://www.w3schools.com/howto/howto_css_icon_buttons.asp

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>TWZIPCODE Demo</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<style>
+  .addr-county {
+/*
+    background: #4169E1;
+    color: #fff
+*/
+
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family:'Noto Sans TC';
+  margin-left: 20px;
+  margin-bottom: 20px;      
+  }
+
+  .addr-district {
+/*
+    background: #008000;
+    color: #fff
+*/
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family:'Noto Sans TC';
+  margin-left: 20px;
+  margin-bottom: 20px;     
+  }
+
+  .addr-zip {
+/*
+    background: #c00;
+    color: #fff;
+    border: 1px solid #666    
+*/
+  /* in visible*/
+  border: none;
+  color: white;
+</style>
+
+<body>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="jquery.twzipcode.min.js"></script>
+
+  <!-- Normal -->
+  <div id="twzipcode"></div>
+
+  <!-- OR HTML5 data-* (Version 1.5+) -->
+  <!--
+
+  <div id="twzipcode">
+    <div data-role="county" data-style="aaa" data-value="110"></div>
+    <div data-role="district" data-style="Style Name" data-value="臺北市"></div>
+    <div data-role="zipcode" data-style="Style Name" data-value="信義區"></div>
+  </div>
+-->
+
+  <script>
+    $('#twzipcode').twzipcode({
+      'css': [
+        'addr-county', //縣市
+        'addr-district', // 鄉鎮市區
+        'addr-zip' // 郵遞區號
+      ]
+    });
+
+    $("#twzipcode").twzipcode('set', {
+      'county': '臺北市',
+      'district': '信義區',
+      'zipcode': 110
+    });
+    
+    console.log($("#twzipcode").twzipcode('get', ['county', 'district']));    
+  </script>
+</body>
+
+</html>

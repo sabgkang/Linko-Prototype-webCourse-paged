@@ -128,9 +128,9 @@ function initMainPage() {
       courseTable.rows.add(courseData);
       courseTable.draw();
 
-      courseHistory.clear().draw();
-      courseHistory.rows.add(courseHistory);
-      courseHistory.draw();
+      courseHistoryTable.clear().draw();
+      courseHistoryTable.rows.add(courseHistory);
+      courseHistoryTable.draw();
     }
 
   });
@@ -139,7 +139,7 @@ function initMainPage() {
     console.log("Detail is clicked");
 
     $("#courseTable").hide();
-    $("#courseHistory").hide();
+    $("#courseHistoryTable").hide();
     $("#spacerBetweenTables").hide();
 
     //$(".dataTables_filter").hide();
@@ -147,9 +147,9 @@ function initMainPage() {
     $('#courseTable_filter').hide();
     $('#courseTable_info').hide();
     $('#courseTable_paginate').hide();
-    $('#courseHistory_filter').hide();
-    $('#courseHistory_info').hide();
-    $('#courseHistory_paginate').hide();
+    $('#courseHistoryTable_filter').hide();
+    $('#courseHistoryTable_info').hide();
+    $('#courseHistoryTable_paginate').hide();
     $("#addCourse").hide();
     $("#inProgress").hide();
     $("#addCourseBtn").hide();
@@ -237,11 +237,13 @@ function initMainPage() {
       // 更新 courseNum
       var tmp2 = courseData[courseData.length - 1][0];
       var tmp2 = parseInt(tmp2.substr(1, 4));
+      
+      console.log(courseHistory);
       var tmp3 = courseHistory[courseHistory.length - 1][0];
       var tmp4 = parseInt(tmp3.substr(1, 4));   
       courseNum = (tmp4 > tmp2)? tmp4:tmp2;   
       
-      // TODO: 更新 database
+      // 更新 database
       database.ref('users/林口運動中心/團課課程').set({
         現在課程: JSON.stringify(courseData),
         過去課程: JSON.stringify(courseHistory),
@@ -252,7 +254,20 @@ function initMainPage() {
             }
               console.log('Write to database successful');
       });
-            
+        
+      courseMember = courseMember.filter(function (value, index, arr) {
+        return value[0] != data[0];
+      });      
+      database.ref('users/林口運動中心/課程管理').set({
+        課程會員: JSON.stringify(courseMember),
+      }, function(error){
+            if (error) {
+              //console.log(error);
+              return 0;
+            }
+              console.log('Write to database successful');
+      });
+               
       console.log(deleteIt);
       console.log(courseData);
       courseTable.clear().draw();
@@ -261,7 +276,7 @@ function initMainPage() {
     }
   });
 
-  var courseHistory = $('#courseHistory').DataTable({
+  var courseHistoryTable = $('#courseHistoryTable').DataTable({
     data: courseHistory,
     pageLength: 8,
     deferRender: true,

@@ -1,2 +1,29 @@
-已將 login 分出到 0-login.html 完成 login 功能
 1-addMember.html 尚須 報名課程 及取消課程
+
+for LINE 報名及課程列表(比賽資料) 網頁
+
+
+用 JavaScript 取得目前網址與其它網址參數簡單語法 http://www.wibibi.com/info.php?tid=82
+<script type="text/javascript">alert(location.href);</script>
+
+假設我們的網址是：http://www.wibibi.com:80/test.html?tid=222#333
+馬上就寫個簡單的範例來取得所有網址資訊
+<script type="text/javascript">
+　alert('location.href: '+location.href);　//輸出値為 location.href: http://www.wibibi.com/test.html?tid=222#333
+　alert('location.protocol: '+location.protocol);　//輸出値為 location.protocol: http:
+　alert('location.hostname: '+location.hostname);　//輸出値為 location.hostname: www.wibibi.com
+　alert('location.host: '+location.host);　//輸出値為 location.host: www.wibibi.com
+　alert('location.port: '+location.port);　//輸出値為 80
+　alert('location.pathname: '+location.pathname);　//輸出値為 location.pathname: /test.html
+　alert('location.search: '+location.search);　//輸出値為 location.search: ?tid=222
+　alert('location.hash: '+location.hash);　//輸出値為 location.hash: #333
+</script>
+
+
+HTML5 Geolocation
+https://www.w3schools.com/html/html5_geolocation.asp
+用 GPS 定位報到
+
+jQuery 套件產生台灣地址下拉選單選項
+https://github.com/essoduke/jQuery-TWzipcode
+參考 本地的 twzipcode_demo.html

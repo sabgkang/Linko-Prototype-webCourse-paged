@@ -10,13 +10,13 @@ function addCourse() {
   $("#courseNumber").text("新增團課課程 - U" + zeroFill(courseNum, 4));
 
   $("#courseTable").hide();
-  $("#courseHistory").hide();
+  $("#courseHistoryTable").hide();
   $("#spacerBetweenTables").hide();
 
   $(".dataTables_filter").hide();
   $(".dataTables_info").hide();
   $('#courseTable_paginate').hide();
-  $('#courseHistory_paginate').hide();
+  $('#courseHistoryTable_paginate').hide();
 
   $("#addCourse").show();
 
@@ -51,7 +51,6 @@ function courseConfirm() {
   // 更新 local courseData
   courseData.push(dataToAdd);
 
-
   
   // 課程寫入資料庫
   database.ref('users/林口運動中心/團課課程').set({
@@ -64,7 +63,18 @@ function courseConfirm() {
       }
         console.log('Write to database successful');
   });
-                                       
+       
+  courseMember.push(["U" + zeroFill(courseNum, 4)]); 
+  database.ref('users/林口運動中心/課程管理').set({
+    課程會員: JSON.stringify(courseMember),
+  }, function(error){
+        if (error) {
+          //console.log(error);
+          return 0;
+        }
+          console.log('Write to database successful');
+  });
+  
   // 更新課程表格
   var courseTable = $('#courseTable').DataTable();
   courseTable.clear().draw();
@@ -74,12 +84,12 @@ function courseConfirm() {
   $("#addCourse").hide();
   $("#courseTable").show();
   $("#spacerBetweenTables").show();
-  $("#courseHistory").show();
+  $("#courseHistoryTable").show();
 
   $(".dataTables_filter").show();
   $(".dataTables_info").show();
   $('#courseTable_paginate').show();
-  $('#courseHistory_paginate').show();
+  $('#courseHistoryTable_paginate').show();
 
   $("#inProgress").show();
   $("#addCourseBtn").show();
@@ -93,13 +103,13 @@ function courseCancel() {
   courseNum--;
   $("#addCourse").hide();
   $("#spacerBetweenTables").show();
-  $("#courseHistory").show();
+  $("#courseHistoryTable").show();
   $("#courseTable").show();
 
   $(".dataTables_filter").show();
   $(".dataTables_info").show();
   $('#courseTable_paginate').show();
-  $('#courseHistory_paginate').show();
+  $('#courseHistoryTable_paginate').show();
 
   $("#inProgress").show();
   $("#addCourseBtn").show();
@@ -126,7 +136,7 @@ function refreshCourse() {
   courseTable.rows.add(courseData);
   courseTable.draw();
 
-  var courseTable = $('#courseHistory').DataTable();
+  var courseTable = $('#courseHistoryTable').DataTable();
   courseTable.clear().draw();
   courseTable.rows.add(courseHistory);
   courseTable.draw();
@@ -138,13 +148,13 @@ function backToHome() {
   $("#courseDetail").hide();
 
   $("#courseTable").show();
-  $("#courseHistory").show();
+  $("#courseHistoryTable").show();
   $("#spacerBetweenTables").show();
 
   $(".dataTables_filter").show();
   $(".dataTables_info").show();
   $('#courseTable_paginate').show();
-  $('#courseHistory_paginate').show();
+  $('#courseHistoryTable_paginate').show();
   $("#addCourse").hide();
   $("#inProgress").show();
   $("#addCourseBtn").show();

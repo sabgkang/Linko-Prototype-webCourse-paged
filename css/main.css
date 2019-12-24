@@ -40,11 +40,11 @@ h2 {
   font-family:'Noto Sans TC';
 }
 
-#courseHistory{
+#courseHistoryTable{
   font-family:'Noto Sans TC';
 }
 
-#courseHistory_info, #courseHistory_filter, #courseHistory_paginate {
+#courseHistoryTable_info, #courseHistoryTable_filter, #courseHistoryTable_paginate {
   font-family:'Noto Sans TC';
 }
 
