@@ -69,6 +69,16 @@ h2 {
   color: white;
 }
 
+.to-remark{
+  height: 30px;
+  width: 50px;
+  background-color: gray;
+  border: none;
+  color: white;
+  font-family:'Noto Sans TC';
+  margin-bottom: 5px; 
+}
+
 .to-delete{
   height: 30px;
   width: 50px;  

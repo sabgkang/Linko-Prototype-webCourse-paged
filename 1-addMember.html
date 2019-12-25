@@ -182,6 +182,7 @@
     var courseHistory = [];
     
     var userForAddingCourse;
+    var userForCancelCourse;
 
     // Monitoring AuthState
     firebase.auth().onAuthStateChanged(function(user) {
@@ -302,6 +303,9 @@
 
         var data = memberTable.row($(this).parents('tr')).data();
         var userName = data[0];
+        
+        // 取消課程用
+        userForCancelCourse = data[0];
 
         $("#客戶已報名課程").text(data[0] + " - 已報名課程");
 
@@ -445,10 +449,54 @@
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'checkAttendBtn to-edit' style='width: 100px'>取消</button> "
+            defaultContent: "<button class = 'cancelCourseBtn to-edit' style='width: 100px'>取消</button> "
           }
         ]
       });
+      
+      // ============ Function for cancelCourseBtn ================================================== 
+      $('#myCoursesTable tbody').on('click', '.cancelCourseBtn', function() {
+        console.log("cancelCourseBtn is clicked");
+        
+        var myCoursesTable = $('#myCoursesTable').DataTable();
+        var data = myCoursesTable.row($(this).parents('tr')).data();
+        var courseName = data[0];
+        var courseIdx = -1;
+        var alreadyInCourse = false;
+        
+        // 檢查是否已報過名
+        courseMember.forEach(function(course, index, array){
+          if (course[0]==courseName) {
+            for (var i=0; i< course.length; i++) {
+              //console.log(course[i][0]);
+              if (course[i][0]==userForCancelCourse) {
+                //alert("已經報過名了");
+                console.log(courseMember[index][i]);
+                alreadyInCourse = true;
+                courseMember[index].splice(i, 1);
+                //return(0); //只跳出 forEach 迴圈
+              }
+            };
+          }
+        })
+                   
+        if(alreadyInCourse) {
+          console.log("aaa");
+          closeMyCourses();
+          database.ref('users/林口運動中心/課程管理').set({
+            課程會員: JSON.stringify(courseMember),
+          }, function(error){
+                if (error) {
+                  //console.log(error);
+                  return 0;
+                }
+                  console.log('Write to database successful');
+          });          
+        }
+        
+        
+
+      });      
 
       $("#myCoursesTable_filter").css("font-family", "Noto Sans TC");
       $("#myCoursesTable_info").css("font-family", "Noto Sans TC");
@@ -484,7 +532,7 @@
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'checkAttendBtn to-edit' style='width: 100px'>取消</button> "
+            defaultContent: "<button class = 'checkAttendBtn to-remark' style='width: 100px'>備註</button> "
           }
         ]
       });
@@ -525,14 +573,14 @@
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'selectBtn to-edit' style='width: 100px'>報名</button> "
+            defaultContent: "<button class = 'selectCourseBtn to-edit' style='width: 100px'>報名</button> "
           }
         ]
       });
 
-      // ============ Function for selectBtn ================================================== 
-      $('#coursesTable tbody').on('click', '.selectBtn', function() {
-        console.log("selectBtn is clicked - not implemented yet");
+      // ============ Function for selectCourseBtn ================================================== 
+      $('#coursesTable tbody').on('click', '.selectCourseBtn', function() {
+        console.log("selectCourseBtn is clicked");
         
         var coursesTable = $('#coursesTable').DataTable();
         var data = coursesTable.row($(this).parents('tr')).data();
@@ -546,7 +594,7 @@
             for (var i=0; i< course.length; i++) {
               //console.log(course[i][0]);
               if (course[i][0]==userForAddingCourse) {
-                alert("已經報過名了");
+                alert("您已經報過此課程了");
                 alreadyInCourse = true;
                 return(0); //只跳出 forEach 迴圈
               }
@@ -558,13 +606,17 @@
         
         if(!alreadyInCourse) {
           courseMember[courseIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
-        }
-        
-        //TODO:  Write courseMember to database
-        
-        //console.log(courseName);
-        //console.log(userForAddingCourse);
-        
+          //TODO:  Write courseMember to database
+          database.ref('users/林口運動中心/課程管理').set({
+            課程會員: JSON.stringify(courseMember),
+          }, function(error){
+                if (error) {
+                  //console.log(error);
+                  return 0;
+                }
+                  console.log('Write to database successful');
+          });          
+        }      
 
       });
       

@@ -1,4 +1,6 @@
-1-addMember.html 尚須 報名課程 及取消課程
+index.html 尚須完成 繳費 和 簽到
+
+每頁加上 uCare Logo 及 宇康醫電中文字
 
 for LINE 報名及課程列表(比賽資料) 網頁
 
