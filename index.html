@@ -61,7 +61,7 @@
     <button class="btn-blue" id="logToggle" onclick="logInAndOut()" style="float: right; margin-right: 10px; margin-left: 0px"><i class="fa fa-sign-in"></i>&nbsp 登入</button>
     <button id="loginStatus" class="btn-blue" style="float: right; background-color: white; color: gray">請登入來寫入資料庫</button>
 
-    <h1>林口運動中心 - 團體課程管理</h1>
+    <h1 id="titleHeader">林口運動中心 - 團體課程管理</h1>
   </div>
   <hr>
   
@@ -304,6 +304,9 @@
       <script type="text/javascript">
         var courseNum = 0; // Update from Database
         var inAddCourse = false;
+        var version = " V0.9";
+        
+        $("#titleHeader").text("林口運動中心 - 團體課程管理"+version);
 
         // 資料格式
         //        var memberData = [
