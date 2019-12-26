@@ -138,6 +138,11 @@ function initMainPage() {
   $('#courseTable tbody').on('click', '.detailButton', function () {
     console.log("Detail is clicked");
     
+    if (!isLogin) {
+      alert("必須登入後才能查看");
+      return 0;
+    }    
+    
     courseMemberSet=[];
 
     $("#courseTable").hide();
@@ -224,7 +229,7 @@ function initMainPage() {
     // delete button
     console.log("delete:");
     if (!isLogin) {
-      alert("必須登入後才能修改");
+      alert("必須登入後才能刪除");
       return 0;
     }
     var data = courseTable.row($(this).parents('tr')).data();
