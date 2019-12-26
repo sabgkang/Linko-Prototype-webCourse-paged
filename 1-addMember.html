@@ -606,7 +606,7 @@
         
         if(!alreadyInCourse) {
           courseMember[courseIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
-          //TODO:  Write courseMember to database
+          // Write courseMember to database
           database.ref('users/林口運動中心/課程管理').set({
             課程會員: JSON.stringify(courseMember),
           }, function(error){

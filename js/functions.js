@@ -129,8 +129,6 @@ function zeroFill(number, width) {
 function refreshCourse() {
   console.log("Refresh Course");
 
-  // TODO: 讀取 Database 的課程資料
-
   var courseTable = $('#courseTable').DataTable();
   courseTable.clear().draw();
   courseTable.rows.add(courseData);

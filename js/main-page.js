@@ -112,7 +112,7 @@ function initMainPage() {
       var tmp4 = parseInt(tmp3.substr(1, 4));
       courseNum = (tmp4 > tmp2) ? tmp4 : tmp2;
 
-      // TODO: 更新 database
+      // 更新 database
       database.ref('users/林口運動中心/團課課程').set({
         現在課程: JSON.stringify(courseData),
         過去課程: JSON.stringify(courseHistory),
@@ -137,6 +137,8 @@ function initMainPage() {
 
   $('#courseTable tbody').on('click', '.detailButton', function () {
     console.log("Detail is clicked");
+    
+    courseMemberSet=[];
 
     $("#courseTable").hide();
     $("#courseHistoryTable").hide();
@@ -344,17 +346,21 @@ function initMainPage() {
         className: "centerCell",
         data: null,
         defaultContent: "<button class = 'payButton to-edit'>繳費</button> " +
-          "<button class = 'checkInButton to-edit'>簽到</button> "
+          "<button class = 'checkInButton to-edit'>簽到</button> " +
+          "<button class = 'resetButton to-edit'>重置</button> " 
               }
             ]
   });
   
   $('#courseMemberTable tbody').on('click', '.payButton', function () {
+    var confirmIt = confirm("請確定已繳費!");
+    if (!confirmIt) return 0;
+    
     console.log("payButton is clicked");
 
     //var data = courseMemberTable.row($(this)).data();
     var data = courseMemberTable.row($(this).parents('tr')).data();    
-    console.log(data[0]);
+    //console.log(data[0]);
     
     var thisCourse;
     var thisIndex;
@@ -367,30 +373,55 @@ function initMainPage() {
       }
     });
       
-    console.log(thisCourse, thisIndex, data[0]);
+    //console.log(thisCourse, thisIndex, data[0]);
       
     var thisCourseLength = thisCourse.length;
     var thisI;
     for (var i = 0; i < thisCourseLength; i++) {
       if (thisCourse[i][0] == data[0]) {
-        console.log(thisCourse[i], thisIndex, i);
+        //console.log(thisCourse[i], thisIndex, i);
         thisI = i;
       };
     }   
     
-    console.log(courseMember[thisIndex][thisI][1]);
+    //console.log(courseMember[thisIndex][thisI][0],courseMember[thisIndex][thisI][1]);
     courseMember[thisIndex][thisI][1] = "已繳費";
 
-    //TODO: update courseMemberSet 及其 Table
-    //TODO: write courseMember to database
+    // Update courseMemberSet 及其 Table  
+    for (var i=0; i< courseMemberSet.length; i++){
+      //console.log(courseMemberSet[i][0], data[0]);
+      if (courseMemberSet[i][0] == data[0]) {
+        //console.log("match");
+        courseMemberSet[i][5] = "已繳費";
+      };
+    };
+    
+    var table = $('#courseMemberTable').DataTable();
+    table.clear().draw();
+    table.rows.add(courseMemberSet);
+    table.draw();    
+    
+    // Write courseMember to database
+    database.ref('users/林口運動中心/課程管理').set({
+      課程會員: JSON.stringify(courseMember),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    }); 
+    
   });
 
   $('#courseMemberTable tbody').on('click', '.checkInButton', function () {
+    var confirmIt = confirm("請確定已簽到!");
+    if (!confirmIt) return 0;    
     console.log("checkInButton is clicked");
 
     //var data = courseMemberTable.row($(this)).data();
     var data = courseMemberTable.row($(this).parents('tr')).data();    
-    console.log(data[0]);
+    //console.log(data[0]);
     
     var thisCourse;
     var thisIndex;
@@ -403,23 +434,110 @@ function initMainPage() {
       }
     });
       
-    console.log(thisCourse, thisIndex, data[0]);
+    //console.log(thisCourse, thisIndex, data[0]);
       
     var thisCourseLength = thisCourse.length;
     var thisI;
     for (var i = 0; i < thisCourseLength; i++) {
       if (thisCourse[i][0] == data[0]) {
-        console.log(thisCourse[i], thisIndex, i);
+        //console.log(thisCourse[i], thisIndex, i);
         thisI = i;
       };
     }   
     
-    console.log(courseMember[thisIndex][thisI][2]);
+    //console.log(courseMember[thisIndex][thisI][2]);
     courseMember[thisIndex][thisI][2] = "已簽到";
 
-    //TODO: update courseMemberSet 及其 Table
-    //TODO: write courseMember to database
+    // Update courseMemberSet 及其 Table
+    for (var i=0; i< courseMemberSet.length; i++){
+      //console.log(courseMemberSet[i][0], data[0]);
+      if (courseMemberSet[i][0] == data[0]) {
+        //console.log("match");
+        courseMemberSet[i][6] = "已簽到";
+      };
+    };
+    
+    var table = $('#courseMemberTable').DataTable();
+    table.clear().draw();
+    table.rows.add(courseMemberSet);
+    table.draw();  
+    
+    // Write courseMember to database
+    database.ref('users/林口運動中心/課程管理').set({
+      課程會員: JSON.stringify(courseMember),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    });
+    
   });  
+
+  $('#courseMemberTable tbody').on('click', '.resetButton', function () {
+    var confirmIt = confirm("請確定要重置!");
+    if (!confirmIt) return 0;
+    
+    console.log("resetButton is clicked");
+
+    //var data = courseMemberTable.row($(this)).data();
+    var data = courseMemberTable.row($(this).parents('tr')).data();    
+    //console.log(data[0]);
+    
+    var thisCourse;
+    var thisIndex;
+    courseMember.forEach(function(item, index, array) {
+      //console.log(item[1][0]);
+      if (item[0]== courseForDetail) {
+        //console.log(item, data[0]);
+        thisCourse = item;
+        thisIndex = index;
+      }
+    });
+      
+    //console.log(thisCourse, thisIndex, data[0]);
+      
+    var thisCourseLength = thisCourse.length;
+    var thisI;
+    for (var i = 0; i < thisCourseLength; i++) {
+      if (thisCourse[i][0] == data[0]) {
+        //console.log(thisCourse[i], thisIndex, i);
+        thisI = i;
+      };
+    }   
+    
+    //console.log(courseMember[thisIndex][thisI][0],courseMember[thisIndex][thisI][1]);
+    courseMember[thisIndex][thisI][1] = "未繳費";
+    courseMember[thisIndex][thisI][2] = "未簽到";
+
+    // Update courseMemberSet 及其 Table  
+    for (var i=0; i< courseMemberSet.length; i++){
+      //console.log(courseMemberSet[i][0], data[0]);
+      if (courseMemberSet[i][0] == data[0]) {
+        //console.log("match");
+        courseMemberSet[i][5] = "未繳費";
+        courseMemberSet[i][6] = "未簽到";
+      };
+    };
+    
+    var table = $('#courseMemberTable').DataTable();
+    table.clear().draw();
+    table.rows.add(courseMemberSet);
+    table.draw();    
+    
+    // Write courseMember to database
+    database.ref('users/林口運動中心/課程管理').set({
+      課程會員: JSON.stringify(courseMember),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    });
+    
+  });
   
 }
 
