@@ -42,20 +42,7 @@
 
   <!--  end of for test -->
   
-
-<!-- Move login to 0-login.html
-  <div id="loginDiv" style="border-width:1px;border-style:solid;border-color:gray;padding-top: 30px; width: 650px;height: 180px; margin: 0 auto; margin-top: 30px">
-    <div class="courseLabel" style="width: 150px; float: left; text-align: right">Email Address</div>
-    <input id="emailAddress" class="courseInput" style="width: 440px" type="email" placeholder="請輸入 Email Address"><br>
-
-    <div class="courseLabel" style="width: 150px; float: left; text-align: right">密 碼</div>
-    <input id="password" class="courseInput" style="width: 440px" type="password" placeholder="請輸入密碼"><br>
-
-    <button class="btn-blue" onclick="signIn()" style="margin-left: 250px"><i class="fa fa-sign-in"></i>&nbsp 登入</button>
-    <button class="btn-red" onclick="signInAbort()" style="margin-left: 30px"><i class="fa fa-thumbs-down"></i>&nbsp 放棄</button>
-  </div>
--->
-
+  <!--  **** 標頭 ****-->
   <div>
     <button class="btn-blue" id="memberMangementBtn" onclick="memberManage()" style="float: right; margin-right: 10px" disabled="disabled" ><i class="fa fa-user"></i>&nbsp 客戶管理</button>
     <button class="btn-blue" id="logToggle" onclick="logInAndOut()" style="float: right; margin-right: 10px; margin-left: 0px"><i class="fa fa-sign-in"></i>&nbsp 登入</button>
@@ -64,65 +51,13 @@
     <h1 id="titleHeader">林口運動中心 - 團體課程管理</h1>
   </div>
   <hr>
+  <!--  **** 標頭:結束 ****-->
   
-<!--
-  <div id="memberDiv" >
-  <h2 id="inProgress">客戶管理</h2>
-  
-  <button class="btn-blue" id="closeMemberBtn" onclick="closeMember()"><i class="fa fa-window-close"></i>&nbsp 關閉</button>
-  <button class="btn-blue" id="addMemberBtn" onclick="addMember()"><i class="fa fa-plus"></i>&nbsp 新增客戶</button>
-
-  <button class="btn-red" id="refreshMemberBtn" onclick="readMemberfromDB()" style="margin-left: 20px"><i class="fa fa-refresh"></i>&nbsp 刷新客戶</button>
-
-  <table id="memberTable" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
-    <thead>
-      <tr id="table-header">
-        <th style="width: 80px">姓名</th>
-        <th style="width: 80px">LINE ID</th>
-        <th style="width: 50px">性別</th>
-        <th style="width: 100px">生日</th>
-        <th style="width: 50px">電話</th>        
-        <th style="width: 80px">身分字號</th>
-        <th>地址</th>
-        <th style="width: 150px">操作</th>        
-      </tr>
-    </thead>
-  </table>    
-  </div>
-
-  <div id="addMemberInfo" style=" font-family:'Noto Sans TC'">
-    <h2 value="00">新增客戶</h2>
-    <div style="font-size: 20px;">
-      <div class="courseLabel">客戶姓名</div> <input id="newMemberName" class="courseInput" type="text" placeholder="請輸入客戶姓名"><br>     
-      <div class="courseLabel">LINE Id</div> <input id="newMemberLINEId" class="courseInput" type="text" placeholder="請輸入LINE ID"><br>      
-      <div class="courseLabel">性別</div>   
-        <select id="newMemberGender" class="courseInput" name="newMemberGender" style="width: 413px;height: 38px">
-          <option value="男">男</option>
-          <option value="女">女</option>
-          <option value="其他">其他</option>
-          <option value="不透漏">不透漏</option>          
-        </select><br>
-
-      <div class="courseLabel">生日</div> <input id="newMemberBirth" class="courseInput" type="text" placeholder="請輸入生日，例如 2019-01-01" ><br>
-      
-      <div class="courseLabel">電話</div> <input id="newMemberPhoneNum" class="courseInput" type="text" placeholder="請輸入電話"><br>
-      
-      <div class="courseLabel">身分字號</div> <input id="newMemberIdNum" class="courseInput" type="text" placeholder="請輸入客戶身分字號"><br>
-            
-      <div class="courseLabel">地址</div> <input id="newMemberAssress" class="courseInput" type="text" placeholder="請輸入客戶地址"><br>
-      <button class="btn-blue" onclick="addMemberInfo()">確定</button>
-      <button class="btn-red" onclick="closeAddMember()">取消</button>
-    </div>       
-  </div>
--->
-    
-  
+  <!--  **** 進行中課程的畫面 **** ?? 為什麼不包成一個大 DIV，方便 hide() 和 show()?? -->
   <h2 id="inProgress">進行中課程</h2>
   <button class="btn-blue" id="addCourseBtn" onclick="addCourse()"><i class="fa fa-plus"></i>&nbsp 新增課程</button>
 
   <button class="btn-red" id="refreshBtn" onclick="readFromDB()" style="margin-left: 20px"><i class="fa fa-refresh"></i>&nbsp 刷新課程</button>
-
-  <!--  <table id="courseTable" class="display" width="100%" ></table>-->
 
   <table id="courseTable" class="display">
     <thead>
@@ -138,7 +73,9 @@
       </tr>
     </thead>
   </table>
-
+  <!--  **** 進行中課程的畫面:結束 **** -->
+  
+  <!--  **** 課程歷史的畫面 **** ?? 為什麼不包成一個大 DIV，方便 hide() 和 show()?? -->  
   <div id="spacerBetweenTables" style="height: 100px; text-align: ">
     <div style="height: 50px"></div>
     <hr>
@@ -158,7 +95,9 @@
       </tr>
     </thead>
   </table>
+  <!--  **** 課程歷史的畫面:結束 **** -->
 
+  <!--  **** 新增課程的畫面，包成一個大 DIV，方便 hide() 和 show() **** -->
   <div id="addCourse" style="height: 600px; font-family:'Noto Sans TC'">
     <h2 id="courseNumber" value="00">新增團課課程 - U0000</h2>
     <button class="btn-blue" onclick="addNewCoach()" style="margin-bottom: 0">查詢/新增 老師</button>
@@ -193,7 +132,9 @@
       <br>
     </div>       
   </div>
-
+  <!--  **** 新增課程的畫面:結束 **** -->
+  
+  <!--  **** 教練管理的畫面，目前沒有刪除教練的按鈕 **** -->
   <div id="coachTable" style="font-size: 20px;font-family:'Noto Sans TC'" >
     <div style="margin-left:20px;width:600px; heigth=200px;">
       <button class="btn-blue" onclick="goToAddCoach()">新增老師</button>
@@ -210,8 +151,10 @@
         </thead>
       </table>
     </div>
-  </div>    
+  </div> 
+  <!--  **** 教練管理的畫面:結束 **** -->   
   
+  <!--  **** 新增教練的表格 **** -->
   <div id="newCoachInfo" style="height: 600px; font-family:'Noto Sans TC'">
     <h2 value="00">新增老師</h2>
     <div style="font-size: 20px;">
@@ -231,8 +174,9 @@
       <button class="btn-red" onclick="backToAddCourse()">取消</button>
     </div>       
   </div>  
-  
+  <!--  **** 新增教練的表格:結束 **** -->
 
+  <!--  **** 課程細節的畫面，可以更新課程資料，繳費及簽到 **** -->
   <div id="courseDetail" style="height: 600px; font-family:'Noto Sans TC'">
     <button class="btn-blue" onclick="backToHome()" style="float: left"><i class="fa fa-arrow-left"></i>&nbsp 回到 課程管理</button>
     <h2 id="courseNumberDetail" style="margin-left: 200px" value="00">簽到頁面</h2>
@@ -257,8 +201,6 @@
       <button class="btn-blue" onclick="backToHome()"><i class="fa fa-arrow-left"></i>&nbsp 回到 課程管理</button>
       <button class="btn-red" onclick="courseUpdate()">更新 課程資料</button>
       <br>
-
-<!--      <button class="btn-blue" onclick="" style="float: right; width: 168px; height: 30px;padding: 0px;margin-bottom: 10px" ><i class="fa fa-pen"></i>&nbsp 報名課程</button>     -->
      
       <table id="courseMemberTable" class="display" style="width:100%;font-family:'Noto Sans TC'">
         <thead>
@@ -273,154 +215,162 @@
             <th style="width: 30px">操作</th>
           </tr>
         </thead>
-      </table </div> </div> 
-      <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
-
-      <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-      <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-app.js"></script>
-
-      <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
-      <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-analytics.js"></script>
-
-      <!-- Add Firebase products that you want to use -->
-      <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-auth.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-database.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-firestore.js"></script>
-
-      
-      <!-- Firebase Operations-->
-      <script src="js/firebase-ops.js"></script>
-      
-      <script>
-        var courseData = [];
-        var courseHistory = [];
-        var courseMemberSet = [];
-        var coachSet = [];
-        var memberData = [];
-        var courseForDetail;
-
-        readFromDB();
-        
-        window.name="";
-      </script>      
-      
-      <!-- Main page init-->
-      <script src="js/main-page.js"></script>
-      
-      <!-- Functions-->
-      <script src="js/functions.js"></script>      
+      </table>
+    </div> 
+  </div>    
+  <!--  **** 課程細節的畫面:結束 **** -->
+  
+  <!--  **** 以上 HTML 畫面設計結束，但 datatables 必須靠 js/main-page.js 來完成。以下是 Javascript codes **** -->
      
-      <script type="text/javascript">
-        var courseNum = 0; // Update from Database
-        var inAddCourse = false;
-        var version = " V0.95";
-        
-        $("#titleHeader").text("林口運動中心 - 團體課程管理"+version);
+  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-app.js"></script>
 
-        // 資料格式
-        //        var memberData = [
-        //          ["謝小憲", "Jacky",   "男", "1966-01-01", "09XXXXXXXX", "A1XXXXXXXX", "台北市"],
-        //          ["許小琦", "Chantal", "女", "1966-02-02", "09XXXXXXXX", "A1XXXXXXXX", "竹北市"],   
-        //          ["盧小宏", "Tony",    "男", "1966-03-03", "09XXXXXXXX", "A1XXXXXXXX", "新竹市"],   
-        //        ];
-        //
-        //        var courseMember =[
-        //          ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],
-        //          ["U0002", ["許小琦", "已繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],   
-        //          ["U0003", ["盧小宏", "未繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],           
-        //        ];
-        //
-        //        var courseMemberSet = [
-        //          ["謝東憲", "Jacky", "09XXXXXXXX", "A1XXXXXXXX", "台北市總統府", "YES", "NO"],
-        //        ];
-        //
-        //        [ID, Name, Coach, date/time, Calories, Max.Persons, Assist, Fee, OtherDesc]
-        //        var courseData = [
-        //          ["U0002", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
-        //            "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
-        //          ],
-        //        ];
-        //
-        //        var courseHistory = [
-        //          ["U0001", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
-        //            "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
-        //          ],
-        //        ];    
-        //        var coachSet = [
-        //          ["Jack", "男", "高大帥"],
-        //          ["Chantal", "女", "愛跑馬拉松"],
-        //        ];        
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <!--  analytic 功能先不用-->
+  <!--  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-analytics.js"></script>-->
 
-        // 從 Firebase 資料庫取得 courseData 和 courseHistory, 在 js/firebase-ops.js 中
-        //readFromDB();
-        
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-database.js"></script>
+  
+  <!--  firestore 功能先不用-->
+  <!--  <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-firestore.js"></script>-->
+
+
+  <!-- 我們的 Firebase Operations 放在 js/firebase-ops.js -->
+  <script src="js/firebase-ops.js"></script>
+
+  <script>
+    //   資料格式
+    //    var memberData = [
+    //      ["謝小憲", "Jacky",   "男", "1966-01-01", "09XXXXXXXX", "A1XXXXXXXX", "台北市"],
+    //      ["許小琦", "Chantal", "女", "1966-02-02", "09XXXXXXXX", "A1XXXXXXXX", "竹北市"],   
+    //      ["盧小宏", "Tony",    "男", "1966-03-03", "09XXXXXXXX", "A1XXXXXXXX", "新竹市"],   
+    //    ];
+    //
+    //    var courseMember =[
+    //      ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],
+    //      ["U0002", ["許小琦", "已繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],   
+    //      ["U0003", ["盧小宏", "未繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],           
+    //    ];
+    //
+    //    var courseMemberSet = [
+    //      ["謝東憲", "Jacky", "09XXXXXXXX", "A1XXXXXXXX", "台北市總統府", "YES", "NO"],
+    //    ];
+    //
+    //    [ID, Name, Coach, date/time, Calories, Max.Persons, Assist, Fee, OtherDesc]
+    //    var courseData = [
+    //      ["U0002", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
+    //        "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
+    //      ],
+    //    ];
+    //
+    //    var courseHistory = [
+    //      ["U0001", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
+    //        "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
+    //      ],
+    //    ];    
+    //    var coachSet = [
+    //      ["Jack", "男", "高大帥"],
+    //      ["Chantal", "女", "愛跑馬拉松"],
+    //    ];  
     
+    // 全域變數，偷懶用，容易產生麻煩的 bugs
+    var courseData = [];
+    var courseHistory = [];
+    var courseMemberSet = [];
+    var coachSet = [];
+    var memberData = [];
+    var courseForDetail;
 
-        $(document).ready(function() {
-          initMainPage(); // 在 js/main-page.js       
+    // 從 Firebase 資料庫取得 courseData, courseHistory, memberData, courseMember, coachSet, 
+    // 定義在 js/firebase-ops.js 中
+    readFromDB();
+
+  </script>      
+
+  <!-- Main page init，初始化 datatables-->
+  <script src="js/main-page.js"></script>
+
+  <!-- 我們的 Functions-->
+  <script src="js/functions.js"></script>      
+
+  <!--  **** MAIN ***-->
+  <script type="text/javascript">
+    var courseNum = 0; // Update from Database
+    var inAddCourse = false;
+    var version = " V0.95";
+
+    $("#titleHeader").text("林口運動中心 - 團體課程管理"+version);
+
+
+    $(document).ready(function() {
+      initMainPage(); // 在 js/main-page.js  
+
+    });
+  </script>
+
+
+    <script>        
+      // ========= 以下為方便 debug 的函式
+
+      var i = 0;
+
+      function myFunctionA() {
+        firebase.auth().signInWithEmailAndPassword("aaa@test.com", "aaaaaa").catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          document.getElementById("loader").innerHTML = "Login Error";
         });
-      </script>
-      
-      
-      <script>        
-        // =====================================================================below are for tests
+      }
 
-        var i = 0;
+      function myFunctionB() {
+        firebase.auth().signInWithEmailAndPassword("bbb@test.com", "bbbbbb").catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          document.getElementById("loader").innerHTML = "Login Error";
+        });
+      }
 
-        function myFunctionA() {
-          firebase.auth().signInWithEmailAndPassword("aaa@test.com", "aaaaaa").catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            document.getElementById("loader").innerHTML = "Login Error";
-          });
-        }
-
-        function myFunctionB() {
-          firebase.auth().signInWithEmailAndPassword("bbb@test.com", "bbbbbb").catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            document.getElementById("loader").innerHTML = "Login Error";
-          });
-        }
-
-        function myFunction() {
+      function myFunction() {
 //          var user = firebase.auth().currentUser;
 //          console.log(user.uid);
-          
+
+      }
+
+      function myFunctionSignOut() {
+        firebase.auth().signOut();
+        console.log("logout");
+      }
+
+      function myFunctionR() {
+        console.log("Read Database");
+
+        //var userId = firebase.auth().currentUser.uid;
+
+        //          var aaa = firebase.database().ref('users/林口運動中心/'+userId+'/團課課程').once('value').then(function(snapshot) {
+        var aaa = firebase.database().ref('users/林口運動中心/團課課程/').once('value').then(function(snapshot) {
+          console.log("done");
+          var bbb = snapshot.val();
+          console.log(bbb);
+          console.log(JSON.parse(bbb.現在課程));
+          courseData = JSON.parse(bbb.現在課程);
+        });
+
+      }
+
+
+      function myFunctionW() {
+
+        try {
+          var userId = firebase.auth().currentUser.uid;
+        } catch (e) {
+          alert("Please login first!");
+          return 0;
         }
-
-        function myFunctionSignOut() {
-          firebase.auth().signOut();
-          console.log("logout");
-        }
-
-        function myFunctionR() {
-          console.log("Read Database");
-
-          //var userId = firebase.auth().currentUser.uid;
-
-          //          var aaa = firebase.database().ref('users/林口運動中心/'+userId+'/團課課程').once('value').then(function(snapshot) {
-          var aaa = firebase.database().ref('users/林口運動中心/團課課程/').once('value').then(function(snapshot) {
-            console.log("done");
-            var bbb = snapshot.val();
-            console.log(bbb);
-            console.log(JSON.parse(bbb.現在課程));
-            courseData = JSON.parse(bbb.現在課程);
-          });
-
-        }
-
-
-        function myFunctionW() {
-
-          try {
-            var userId = firebase.auth().currentUser.uid;
-          } catch (e) {
-            alert("Please login first!");
-            return 0;
-          }
 
 //          console.log("Write Database" + userId);
 //
@@ -447,39 +397,39 @@
 //
 //          });
           
-          var courseMember =[
-            ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],         
-          ];          
+        var courseMember =[
+          ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],         
+        ];          
 
-          database.ref('users/林口運動中心/課程管理').set({
-            課程會員: JSON.stringify(courseMember),
+        database.ref('users/林口運動中心/課程管理').set({
+          課程會員: JSON.stringify(courseMember),
 
-          });
-                    
-
-          i++;
-
-        }
-
-        function aaaFunction() {
-          console.log("aaa");
-          //$("#centerCell").css('background-color', 'red');
-          $("#aaa").css({
-            "background-color": "yellow",
-            "font-size": "200%"
-          });
-          $("#aaa").html('Save');
-        }
+        });
 
 
+        i++;
 
-        function cccFunction() {
-          console.log("ccc");
+      }
 
-          $("#courseTable").hide();
-          $("#addCourse").show();
-        }
-      </script>
+      function aaaFunction() {
+        console.log("aaa");
+        //$("#centerCell").css('background-color', 'red');
+        $("#aaa").css({
+          "background-color": "yellow",
+          "font-size": "200%"
+        });
+        $("#aaa").html('Save');
+      }
+
+
+
+      function cccFunction() {
+        console.log("ccc");
+
+        $("#courseTable").hide();
+        $("#addCourse").show();
+      }
+    </script>
 
 </body>
 
