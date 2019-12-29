@@ -590,6 +590,7 @@
         // 檢查是否已報過名
         courseMember.forEach(function(course, index, array){
           if (course[0]==courseName) {
+            //console.log(courseName);
             courseIdx = index;
             for (var i=0; i< course.length; i++) {
               //console.log(course[i][0]);
@@ -602,7 +603,7 @@
           }
         })
         
-        console.log(courseIdx);
+        //console.log(courseIdx);
         
         if(!alreadyInCourse) {
           courseMember[courseIdx].push([userForAddingCourse, "未繳費", "未簽到"]);

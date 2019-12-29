@@ -169,7 +169,12 @@
 
       <div class="courseLabel">助教姓名</div> <input id="assistName" class="courseInput" type="text" placeholder="請輸入助教姓名"><br>
 
-      <div class="courseLabel">上課日期</div> <input id="courseTime" class="courseInput" type="datetime-local" ><br>   
+      <div class="courseLabel">上課日期</div> 
+      <span>
+        <input id="courseDate" class="courseInput" type="date" style="width: 180px"> 
+        <input id="courseTime" class="courseInput"type="text"  style="width: 200px; height: 28px; margin-left: -10px" placeholder="請輸入時間 例如:18:30">
+      </span>
+      <br>   
 
       <div class="courseLabel">燃燒熱量</div> <input id="Calories" class="courseInput" type="text" placeholder="上課會燃燒的卡路里"><br>
 
@@ -246,7 +251,7 @@
 
       <br>
       <button class="btn-blue" onclick="backToHome()"><i class="fa fa-arrow-left"></i>&nbsp 回到 課程管理</button>
-      <button class="btn-red" onclick="courseUpdate()" disabled="disabled">更新 課程資料</button>
+      <button class="btn-red" onclick="courseUpdate()">更新 課程資料</button>
       <br>
 
 <!--      <button class="btn-blue" onclick="" style="float: right; width: 168px; height: 30px;padding: 0px;margin-bottom: 10px" ><i class="fa fa-pen"></i>&nbsp 報名課程</button>     -->
@@ -304,7 +309,7 @@
       <script type="text/javascript">
         var courseNum = 0; // Update from Database
         var inAddCourse = false;
-        var version = " V0.91";
+        var version = " V0.92";
         
         $("#titleHeader").text("林口運動中心 - 團體課程管理"+version);
 

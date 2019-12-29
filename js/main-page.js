@@ -49,6 +49,7 @@ function initMainPage() {
   //  });  
 
   var courseTable = $('#courseTable').DataTable({
+    order: [[ 0, "desc" ]],
     data: courseData,
     pageLength: 8,
     lengthChange: false,
@@ -106,11 +107,17 @@ function initMainPage() {
       });
 
       // 更新 courseNum
-      var tmp2 = courseData[courseData.length - 1][0];
-      var tmp2 = parseInt(tmp2.substr(1, 4));
-      var tmp3 = courseHistory[courseHistory.length - 1][0];
-      var tmp4 = parseInt(tmp3.substr(1, 4));
-      courseNum = (tmp4 > tmp2) ? tmp4 : tmp2;
+      if (courseData.length>0) {
+        var tmp1 = courseData[courseData.length - 1][0];
+        var tmp2 = parseInt(tmp1.substr(1, 4));
+      } else tmp2 = 0;
+
+      if (courseHistory.length>0) {    
+        var tmp3 = courseHistory[courseHistory.length - 1][0];
+        var tmp4 = parseInt(tmp3.substr(1, 4));  
+      } else tmp4 = 0;
+
+      courseNum = (tmp4 > tmp2)? tmp4:tmp2;
 
       // 更新 database
       database.ref('users/林口運動中心/團課課程').set({
@@ -244,13 +251,17 @@ function initMainPage() {
       });
 
       // 更新 courseNum
-      var tmp2 = courseData[courseData.length - 1][0];
-      var tmp2 = parseInt(tmp2.substr(1, 4));
+      if (courseData.length>0) {
+        var tmp1 = courseData[courseData.length - 1][0];
+        var tmp2 = parseInt(tmp1.substr(1, 4));
+      } else tmp2 = 0;
 
-      console.log(courseHistory);
-      var tmp3 = courseHistory[courseHistory.length - 1][0];
-      var tmp4 = parseInt(tmp3.substr(1, 4));
-      courseNum = (tmp4 > tmp2) ? tmp4 : tmp2;
+      if (courseHistory.length>0) {    
+        var tmp3 = courseHistory[courseHistory.length - 1][0];
+        var tmp4 = parseInt(tmp3.substr(1, 4));  
+      } else tmp4 = 0;
+
+      courseNum = (tmp4 > tmp2)? tmp4:tmp2;
 
       // 更新 database
       database.ref('users/林口運動中心/團課課程').set({
@@ -286,6 +297,7 @@ function initMainPage() {
   });
 
   var courseHistoryTable = $('#courseHistoryTable').DataTable({
+    order: [[ 0, "desc" ]],
     data: courseHistory,
     pageLength: 8,
     deferRender: true,

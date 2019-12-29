@@ -1,10 +1,10 @@
 function addCourse() {
   console.log("addCourse");
 
- if (!isLogin) {
-   alert("必須登入後才能新增課程");
-   return 0;
- }  
+  if (!isLogin) {
+    alert("必須登入後才能新增課程");
+    return 0;
+  }
 
   courseNum++;
   $("#courseNumber").text("新增團課課程 - U" + zeroFill(courseNum, 4));
@@ -30,17 +30,17 @@ function addCourse() {
 
 function courseConfirm() {
   console.log("courseConfirm");
-  
- if (!isLogin) {
-   alert("必須登入後才能新增課程");
-   return 0;
- }
+
+  if (!isLogin) {
+    alert("必須登入後才能新增課程");
+    return 0;
+  }
 
   var dataToAdd = [
             "U" + zeroFill(courseNum, 4),
             $("#courseName").val(),
             $("#coachName").val(),
-            $("#courseTime").val(),
+            $("#courseDate").val() + " " + $("#courseTime").val(),
             $("#Calories").val(),
             $("#maxPersons").val(),
             $("#assistName").val(),
@@ -51,30 +51,30 @@ function courseConfirm() {
   // 更新 local courseData
   courseData.push(dataToAdd);
 
-  
+
   // 課程寫入資料庫
   database.ref('users/林口運動中心/團課課程').set({
     現在課程: JSON.stringify(courseData),
     過去課程: JSON.stringify(courseHistory),
-  }, function(error){
-      if (error) {
-        console.log("Write to database error, revert courseData back");
-        courseData.pop();
-      }
-        console.log('Write to database successful');
+  }, function (error) {
+    if (error) {
+      console.log("Write to database error, revert courseData back");
+      courseData.pop();
+    }
+    console.log('Write to database successful');
   });
-       
-  courseMember.push(["U" + zeroFill(courseNum, 4)]); 
+
+  courseMember.push(["U" + zeroFill(courseNum, 4)]);
   database.ref('users/林口運動中心/課程管理').set({
     課程會員: JSON.stringify(courseMember),
-  }, function(error){
-        if (error) {
-          //console.log(error);
-          return 0;
-        }
-          console.log('Write to database successful');
+  }, function (error) {
+    if (error) {
+      //console.log(error);
+      return 0;
+    }
+    console.log('Write to database successful');
   });
-  
+
   // 更新課程表格
   var courseTable = $('#courseTable').DataTable();
   courseTable.clear().draw();
@@ -159,18 +159,90 @@ function backToHome() {
   $("#refreshBtn").show();
 }
 
+function courseUpdate() {
+  console.log("courseUpdate");
+
+  if (!isLogin) {
+    alert("必須登入後才能更新課程");
+    return 0;
+  }
+
+  var confirmReplace = confirm("確定要更新此課程!");
+
+  if (!confirmReplace) {
+    return 0;
+  } else {
+    var dataToReplace = [
+      courseForDetail,
+      $("#courseNameDetail").val(),
+      $("#coachNameDetail").val(),
+      $("#courseTimeDetail").val(),
+      $("#CaloriesDetail").val(),
+      $("#maxPersonsDetail").val(),
+      $("#assistNameDetail").val(),
+      $("#feeDetail").val(),
+      $("#otherDescDetail").val(),
+    ];
+
+    //console.log(dataToReplace);
+    
+    // TODO: 尋找 courseData 這筆資料，並取代
+    for (var i =0; i< courseData.length; i++){
+      //console.log(courseData[i][0]);
+      if (courseData[i][0]==courseForDetail) {
+        courseData[i] = dataToReplace;
+        break;
+      }
+    }
+        
+    // 課程寫入資料庫
+    database.ref('users/林口運動中心/團課課程').set({
+      現在課程: JSON.stringify(courseData),
+      過去課程: JSON.stringify(courseHistory),
+    }, function (error) {
+      if (error) {
+        console.log("Write to database error, revert courseData back");
+        courseData.pop();
+      }
+      console.log('Write to database successful');
+    });
+
+    // 更新課程表格
+    var courseTable = $('#courseTable').DataTable();
+    courseTable.clear().draw();
+    courseTable.rows.add(courseData);
+    courseTable.draw();
+
+    $("#courseDetail").hide();
+    $("#courseTable").show();
+    $("#spacerBetweenTables").show();
+    $("#courseHistoryTable").show();
+
+    $(".dataTables_filter").show();
+    $(".dataTables_info").show();
+    $('#courseTable_paginate').show();
+    $('#courseHistoryTable_paginate').show();
+
+    $("#inProgress").show();
+    $("#addCourseBtn").show();
+    $("#refreshBtn").show();    
+
+  }
+
+}
+
 function logInAndOut() {
-//  if (!isLogin) {
-//    $("#password").val("");
-//    $("#loginDiv").show();
-//  } else {
-//    firebase.auth().signOut();
+  //  if (!isLogin) {
+  //    $("#password").val("");
+  //    $("#loginDiv").show();
+  //  } else {
+  //    firebase.auth().signOut();
   console.log(isLogin);
   if (!isLogin) {
     window.location.href = '0-login.html';
   } else {
     firebase.auth().signOut();
-  }    
+  }
 }
 
 //function signIn() {
@@ -204,40 +276,43 @@ function logInAndOut() {
 
 function addNewCoach() {
   console.log("Query and Check coach");
-  
+
   var coachs = $('#coachList').DataTable();
   coachs.clear().draw();
   coachs.rows.add(coachSet);
-  coachs.draw();  
-  
-  $("#addCourse").hide();  
+  coachs.draw();
+
+  $("#addCourse").hide();
   $("#coachTable").show();
-  $("#coachList_paginate").css({"font-size": "16px"});
+  $("#coachList_paginate").css({
+    "font-size": "16px"
+  });
 
 }
 
 function backToAddCourse() {
   console.log("Back to AddCourse");
-  
-  $("#addCourse").show();  
+
+  $("#addCourse").show();
   $("#coachTable").hide();
   $("#newCoachInfo").hide();
 }
 
 function goToAddCoach() {
   console.log("goto add new coach");
-    
+
   $("#coachTable").hide();
   $("#newCoachInfo").show();
 }
+
 function addCoachInfo() {
   console.log("Add Coach Info");
-  
-  if ($("#newCoachName").val()=="") {
+
+  if ($("#newCoachName").val() == "") {
     alert("老師姓名不能為空白");
     return 0;
   }
-  
+
   var dataToAdd = [
     $("#newCoachName").val(),
     $("#newCoachGender").val(),
@@ -246,69 +321,68 @@ function addCoachInfo() {
 
   // 更新 local courseData
   coachSet.push(dataToAdd);
-  
+
   // update database  
   database.ref('users/林口運動中心/教練管理').set({
-    老師資料: JSON.stringify(coachSet),  
-  }, function(error){
-      if (error) {
-        //console.log(error);
-        return 0;
-      }
-        console.log('Write to database successful');
+    老師資料: JSON.stringify(coachSet),
+  }, function (error) {
+    if (error) {
+      //console.log(error);
+      return 0;
+    }
+    console.log('Write to database successful');
   });
-  
+
   // update the form
-  $("#coachName").val( $("#newCoachName").val());
-  
+  $("#coachName").val($("#newCoachName").val());
+
   backToAddCourse();
 }
 
 function memberManage() {
   console.log("客戶管理");
 
- if (!isLogin) {
-   alert("必須登入後才能進行客戶管理");
-   return 0;
- } 
- 
-window.location.href = '1-addMember.html';
-  
-//  $("#memberDiv").show();
-//  var memberTable = $('#memberTable').DataTable();
-//  memberTable.clear().draw();
-//  memberTable.rows.add(memberData);
-//  memberTable.draw();
+  if (!isLogin) {
+    alert("必須登入後才能進行客戶管理");
+    return 0;
+  }
+
+  window.location.href = '1-addMember.html';
+
+  //  $("#memberDiv").show();
+  //  var memberTable = $('#memberTable').DataTable();
+  //  memberTable.clear().draw();
+  //  memberTable.rows.add(memberData);
+  //  memberTable.draw();
 }
 
-function closeMember()
-{
+function closeMember() {
   console.log("關閉客戶管理");
-  
-  $("#memberDiv").hide();  
-}
 
-function addMember(){
-  console.log("新增客戶");
-  
   $("#memberDiv").hide();
-  $("#addMemberInfo").show();  
 }
 
-function closeAddMember(){
+function addMember() {
+  console.log("新增客戶");
+
+  $("#memberDiv").hide();
+  $("#addMemberInfo").show();
+}
+
+function closeAddMember() {
   console.log("close addMemberInfo");
   $("#addMemberInfo").hide();
   $("#memberDiv").show();
 }
 
-function addMemberInfo (){
+function addMemberInfo() {
   console.log("確定新增會員");
-  
+
   if (!isLogin) {
     alert("必須登入後才能進行新增客戶");
     return 0;
-  }   
-  
+  }
+
   var dataToAdd = [
             $("#newMemberName").val(),
             $("#newMemberLINEId").val(),
@@ -320,29 +394,30 @@ function addMemberInfo (){
           ];
 
   //console.log(dataToAdd);
-  
+
   // 更新 local courseData
   memberData.push(dataToAdd);
 
-  
+
   // 課程寫入資料庫
   database.ref('users/林口運動中心/客戶管理').set({
     會員資料: JSON.stringify(memberData),
-  }, function(error){
-      if (error) {
-        console.log("Write to database error");
-        courseData.pop();
-      }
-        console.log('Write to database successful'); 
+  }, function (error) {
+    if (error) {
+      console.log("Write to database error");
+      courseData.pop();
+    }
+    console.log('Write to database successful');
   });
-                                       
+
 
   // 更新課程表格  
-//  var memberTable = $('#memberTable').DataTable();
-//  memberTable.clear().draw();
-//  memberTable.rows.add(memberData);
-//  memberTable.draw();  
-//  
-//  $("#addMemberInfo").hide();
-//  $("#memberDiv").show();  
+  //  var memberTable = $('#memberTable').DataTable();
+  //  memberTable.clear().draw();
+  //  memberTable.rows.add(memberData);
+  //  memberTable.draw();  
+  //  
+  //  $("#addMemberInfo").hide();
+  //  $("#memberDiv").show(); 
+
 }
