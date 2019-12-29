@@ -92,11 +92,11 @@
             <th style="width: 200px">老師</th>
             <th style="width: 120px">時間</th>
             <th style="width: 70px">卡路里燃燒</th>
-            <th style="width: 50px">課程人數</th>
-            <th style="width: 150px">操作</th>
+            <th style="width: 50px">繳費狀況</th>
+            <th style="width: 190px">操作</th>
           </tr>
         </thead>
-      </table>
+      </table>S
       <div style="height: 100px"></div>
       <hr>
       <table id="myCoursesHistory" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
@@ -108,7 +108,7 @@
             <th style="width: 120px">時間</th>
             <th style="width: 70px">卡路里燃燒</th>
             <th style="width: 50px">課程人數</th>
-            <th style="width: 150px">操作</th>
+            <th style="width: 190px">操作</th>
           </tr>
         </thead>
       </table>
@@ -156,6 +156,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-firestore.js"></script>
 
+
   <script>
     // Your web app's Firebase configuration
     var firebaseConfig = {
@@ -181,6 +182,7 @@
     var courseData = [];
     var courseHistory = [];
     var notInCourses=[];
+    var username;
     
     var userForAddingCourse;
     var userForCancelCourse;
@@ -303,7 +305,7 @@
 
 
         var data = memberTable.row($(this).parents('tr')).data();
-        var userName = data[0];
+        userName = data[0];
         
         // 取消課程用
         userForCancelCourse = data[0];
@@ -335,7 +337,30 @@
             }
           });
         });
-
+        
+        // Modify my myCoursesData 課程人數 to 繳費狀況 based on courseMember
+        myCoursesData.forEach(function(course, index, array){
+          //console.log(course[0]); // 課程編號
+          
+          courseMember.forEach(function(item, index, array){
+            if (item[0] == course[0]) {
+              //console.log(item);
+              
+              for (var i=1; i<item.length;i++){
+                //console.log(item[i][0], item[i][1]);
+                
+                if (item[i][0]==userName) {
+                  //console.log(userName, item[i][1]);
+                  course[5]=item[i][1];
+                  //console.log("bbb", course);
+                }
+              }
+            }  
+          });
+          
+          //console.log("next");
+        });
+        
         myCoursesHistory = [];
         courseHistory.forEach(function(course, index, array) {
           //console.log(course);
@@ -367,7 +392,7 @@
         console.log("attendBtn is clicked");
 
         var data = memberTable.row($(this).parents('tr')).data();
-        var userName = data[0];
+        userName = data[0];
         userForAddingCourse = data[0]; // simple patch
         
         // 尋找未報名的課程
@@ -377,7 +402,7 @@
           var itemLength = item.length;
           var matched = false;
           for (var i = 0; i < itemLength; i++) {
-            console.log(i, item[i][0]);
+            //console.log(i, item[i][0]);
             if (item[i][0] == userName) {
               matched = true;
             };
@@ -385,7 +410,7 @@
           if (!matched) myCoursesNumbers.push(item[0]);
         });
 
-        console.log("aaa", myCoursesNumbers);
+        //console.log("aaa", myCoursesNumbers);
 
         notInCourses = [];
         courseData.forEach(function(course, index, array) {
@@ -422,7 +447,7 @@
 
         var memberTable = $('#memberTable').DataTable();
         var data = memberTable.row($(this).parents('tr')).data();
-        var userName = data[0];
+        userName = data[0];
 
         console.log(userName);
 
@@ -477,16 +502,71 @@
             className: "centerCell"
           },
           {
-            //title: "課程人數"
+            //title: "繳費狀況"
             className: "centerCell"
           },
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'cancelCourseBtn to-edit' style='width: 100px'>取消</button> "
+            defaultContent: "<button class = 'payFeeBtn to-edit' style='width: 100px'>繳費</button> " 
+                          + "<button class = 'cancelCourseBtn to-delete' style='width: 100px'>取消報名</button> "
           }
         ]
       });
+      
+      // ============ Function for payFeeBtn ================================================== 
+      $('#myCoursesTable tbody').on('click', '.payFeeBtn', function() {
+        console.log("payFeeBtn is clicked");
+                
+        var myCoursesTable = $('#myCoursesTable').DataTable();
+        var data = myCoursesTable.row($(this).parents('tr')).data();
+        var courseName = data[0];
+        
+        if (data[5]=="已繳費") {
+          alert("已經繳過費");
+          return 0;
+        }
+        
+        var makePayment = confirm("確定已繳費");
+        if (!makePayment) {
+          return 0;
+        }
+        
+        //更新繳費狀況
+        console.log("進行繳費");
+        
+        //更新表格
+        data[5] = "已繳費";       
+        var memberTable = $('#myCoursesTable').DataTable();
+        memberTable.clear().draw();
+        memberTable.rows.add(myCoursesData);
+        memberTable.draw();        
+        
+        //TODO: 更新 courseMember
+        courseMember.forEach(function(item, index, array) {
+          //console.log(item[0], courseName);
+          if (item[0]==courseName){
+            var itemLength = item.length;
+            for (var i = 0; i < itemLength; i++) {
+              //console.log(i, item[i][0]);
+              if (item[i][0] == userName) {
+                item[i][1]="已繳費"; // 修改的是 courseMember
+              };
+            };
+          }
+        });
+        
+        //更新 courseMember to 資料庫                   
+          database.ref('users/林口運動中心/課程管理').set({
+            課程會員: JSON.stringify(courseMember),
+          }, function(error){
+                if (error) {
+                  //console.log(error);
+                  return 0;
+                }
+                  console.log('Write to database successful');
+          });          
+      });   
       
       // ============ Function for cancelCourseBtn ================================================== 
       $('#myCoursesTable tbody').on('click', '.cancelCourseBtn', function() {
@@ -611,7 +691,8 @@
           }
         ]
       });
-
+      
+      
       // ============ Function for selectCourseBtn ================================================== 
       $('#notInCoursesTable tbody').on('click', '.selectCourseBtn', function() {
         console.log("selectCourseBtn is clicked");

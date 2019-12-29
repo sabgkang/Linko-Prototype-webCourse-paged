@@ -323,8 +323,34 @@ function initMainPage() {
         //title: "人數"
         className: "centerCell"
               },
+      {
+        //title: "操作",
+        className: "centerCell",
+        data: null,
+        defaultContent: "<button class='copyButton to-edit' style='width: 150px'>複製新增課程</button>" 
+              }              
 
             ]
+  });
+  
+  $('#courseHistoryTable tbody').on('click', '.copyButton', function () {
+    console.log("Copy course");
+    
+    var data = courseHistoryTable.row($(this).parents('tr')).data();     
+
+    console.log(data);
+    $("#courseName").val(data[1]);
+    $("#coachName").val(data[2]);
+    $("#courseDate").val(data[3]);
+    $("#Calories").val(data[4]);
+    $("#maxPersons").val(data[5]);
+    $("#assistName").val(data[6]);
+    $("#fee").val(data[7]);
+    $("#otherDesc").val(data[8]); 
+
+    
+    addCourse();
+      
   });
 
   var courseMemberTable = $('#courseMemberTable').DataTable({
