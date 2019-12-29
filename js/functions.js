@@ -7,7 +7,7 @@ function addCourse() {
   }
 
   //courseNum++;
-  $("#courseNumber").text("新增團課課程 - U" + zeroFill(courseNum, 4));
+  $("#courseNumber").text("新增團課課程 - U" + zeroFill(courseNum+1, 4));
 
   $("#courseTable").hide();
   $("#courseHistoryTable").hide();
@@ -118,7 +118,7 @@ $("#courseHistoryTable").show();
 
 function courseCancel() {
   console.log("courseCancel");
-  courseNum--;
+  //courseNum--;
   $("#addCourse").hide();
   $("#spacerBetweenTables").show();
   $("#courseHistoryTable").show();
