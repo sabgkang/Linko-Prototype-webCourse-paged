@@ -27,6 +27,7 @@
 <body >
   <!--  for test-->
   
+<!--
   <button class="btn-red" onclick="window.location.href = '1-addMember.html';">FOR TEST ONLY!!!!!</button>
   <button onclick="myFunctionA()">SignIn A</button>
   <button onclick="myFunctionB()">SignIn B</button>
@@ -37,6 +38,7 @@
   <button onclick="myFunctionW()">Write Database</button>
 
   <button onclick="myFunctionSignOut()">SignOut</button>
+-->
 
   <!--  end of for test -->
   
@@ -185,6 +187,10 @@
       <br>
       <button class="btn-blue" onclick="courseConfirm()">確定</button>
       <button class="btn-red" onclick="courseCancel()">取消</button>
+      <span style="margin-left: 190px">重複</span>
+      <input id="repeatN" class="courseInput" style="width: 50px; text-align: right; padding-right: 10px;" type="text" value="1" placeholder="重複幾週">
+      週
+      <br>
     </div>       
   </div>
 
@@ -307,7 +313,7 @@
       <script type="text/javascript">
         var courseNum = 0; // Update from Database
         var inAddCourse = false;
-        var version = " V0.94";
+        var version = " V0.95";
         
         $("#titleHeader").text("林口運動中心 - 團體課程管理"+version);
 

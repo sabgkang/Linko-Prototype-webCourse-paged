@@ -338,10 +338,13 @@ function initMainPage() {
     
     var data = courseHistoryTable.row($(this).parents('tr')).data();     
 
-    console.log(data);
+    //console.log(data);
     $("#courseName").val(data[1]);
     $("#coachName").val(data[2]);
-    $("#courseDate").val(data[3]);
+    var dateStr = data[3].split(" ");
+    //console.log(dateStr[0]);
+    $("#courseDate").val(dateStr[0]);
+    $("#courseTime").val(dateStr[1]);
     $("#Calories").val(data[4]);
     $("#maxPersons").val(data[5]);
     $("#assistName").val(data[6]);

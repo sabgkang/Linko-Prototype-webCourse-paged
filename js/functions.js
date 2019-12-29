@@ -6,7 +6,7 @@ function addCourse() {
     return 0;
   }
 
-  courseNum++;
+  //courseNum++;
   $("#courseNumber").text("新增團課課程 - U" + zeroFill(courseNum, 4));
 
   $("#courseTable").hide();
@@ -36,20 +36,38 @@ function courseConfirm() {
     return 0;
   }
 
-  var dataToAdd = [
-            "U" + zeroFill(courseNum, 4),
-            $("#courseName").val(),
-            $("#coachName").val(),
-            $("#courseDate").val() + " " + $("#courseTime").val(),
-            $("#Calories").val(),
-            $("#maxPersons").val(),
-            $("#assistName").val(),
-            $("#fee").val(),
-            $("#otherDesc").val(),
-          ];
+  var startDate = new Date($("#courseDate").val());
+  var nextDate = new Date();
+  //console.log(startDate);
+  nextDate.setDate(startDate.getDate() - 7);
+  var repeatTimes=$("#repeatN").val();
+  for (var i=0; i<repeatTimes; i++){
+    courseNum++;
+    nextDate.setDate(nextDate.getDate() + 7);
+    nextDateStr = nextDate.toLocaleDateString();
+    nextDateStr = nextDateStr.replace(/\//g, "-");
+    //console.log(courseNum, nextDateStr);
+    
+    var courseNameTmp;
+    courseNameTmp = (repeatTimes>1)? $("#courseName").val()+" ("+(i+1)+")":$("#courseName").val();
+    
+    var dataToAdd = [
+              "U" + zeroFill(courseNum, 4),
+              courseNameTmp,
+              $("#coachName").val(),
+              nextDateStr + " " + $("#courseTime").val(),
+              $("#Calories").val(),
+              $("#maxPersons").val(),
+              $("#assistName").val(),
+              $("#fee").val(),
+              $("#otherDesc").val(),
+            ];
 
-  // 更新 local courseData
-  courseData.push(dataToAdd);
+    // 更新 local courseData
+    courseData.push(dataToAdd);
+
+  }
+  
 
 
   // 課程寫入資料庫
