@@ -11,6 +11,8 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+// analytic 功能先不用
 //firebase.analytics();
 
 var database = firebase.database();

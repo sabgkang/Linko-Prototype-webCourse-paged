@@ -102,7 +102,7 @@ function courseConfirm() {
   $("#addCourse").hide();
   $("#courseTable").show();
   $("#spacerBetweenTables").show();
-  $("#courseHistoryTable").show();
+$("#courseHistoryTable").show();
 
   $(".dataTables_filter").show();
   $(".dataTables_info").show();
