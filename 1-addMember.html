@@ -118,14 +118,14 @@
   <!--  ==================== 客戶已報名課程 (HTML)========================-->
 
 
-  <!--  ==================== 參加課程 (HTML)=============================-->
+  <!--  ==================== 報名課程 (HTML)=============================-->
   <div id="courseDiv">
     <h1 id="報名課程">報名課程</h1>
     <hr>
     <div id="courses">
       <button class="btn-blue" id="returnBtn" onclick="returnFromCourses()">返回</button>
 
-      <table id="coursesTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
+      <table id="notInCoursesTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
         <thead>
           <tr id="table-header">
             <th style="width: 120px">現在課程編號</th>
@@ -140,7 +140,7 @@
       </table>
     </div>
   </div>
-  <!--  ==================== 參加課程 (HTML)=============================-->
+  <!--  ==================== 報名課程 (HTML)=============================-->
 
 
   <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
@@ -180,6 +180,7 @@
     var myCoursesHistory = [];
     var courseData = [];
     var courseHistory = [];
+    var notInCourses=[];
     
     var userForAddingCourse;
     var userForCancelCourse;
@@ -283,7 +284,7 @@
             //title: "操作",
             data: null,
             defaultContent: "<button class = 'checkAttendBtn to-edit' style='width: 100px'>已報名課程</button> " +
-              "<button class = 'attendBtn to-edit' style='width: 100px'>參加課程</button> " +
+              "<button class = 'attendBtn to-edit' style='width: 100px'>報名新課程</button> " +
               "<button class = 'memberDeleteBtn to-delete'>刪除</button>"
           }
         ]
@@ -309,25 +310,25 @@
 
         $("#客戶已報名課程").text(data[0] + " - 已報名課程");
 
-        var myCoursNumbers = [];
+        var myCoursesNumbers = [];
         courseMember.forEach(function(item, index, array) {
           //console.log(item[1][0]);
           var itemLength = item.length;
           for (var i = 0; i < itemLength; i++) {
             //console.log(i, item[i][0]);
             if (item[i][0] == userName) {
-              myCoursNumbers.push(item[0]);
+              myCoursesNumbers.push(item[0]);
             };
           }
         });
 
-        //console.log(myCoursNumbers);
+        //console.log(myCoursesNumbers);
 
         myCoursesData = [];
         courseData.forEach(function(course, index, array) {
           //console.log(course);
 
-          myCoursNumbers.forEach(function(attended, index, array) {
+          myCoursesNumbers.forEach(function(attended, index, array) {
             if (attended == course[0]) {
               //console.log("match", attended);
               myCoursesData.push(course);
@@ -339,7 +340,7 @@
         courseHistory.forEach(function(course, index, array) {
           //console.log(course);
 
-          myCoursNumbers.forEach(function(attended, index, array) {
+          myCoursesNumbers.forEach(function(attended, index, array) {
             if (attended == course[0]) {
               //console.log("match", attended);
               myCoursesHistory.push(course);
@@ -363,13 +364,46 @@
 
       // ============ Function for attendBtn ================================================== 
       $('#memberTable tbody').on('click', '.attendBtn', function() {
-        console.log("attendBtn is clicked - not implemented yet");
+        console.log("attendBtn is clicked");
 
         var data = memberTable.row($(this).parents('tr')).data();
-        userForAddingCourse = data[0];
+        var userName = data[0];
+        userForAddingCourse = data[0]; // simple patch
+        
+        // 尋找未報名的課程
+        var myCoursesNumbers = [];
+        courseMember.forEach(function(item, index, array) {
+          //console.log(item[1][0]);
+          var itemLength = item.length;
+          var matched = false;
+          for (var i = 0; i < itemLength; i++) {
+            console.log(i, item[i][0]);
+            if (item[i][0] == userName) {
+              matched = true;
+            };
+          }
+          if (!matched) myCoursesNumbers.push(item[0]);
+        });
+
+        console.log("aaa", myCoursesNumbers);
+
+        notInCourses = [];
+        courseData.forEach(function(course, index, array) {
+          myCoursesNumbers.forEach(function(notAttended, index, array) {
+            if (notAttended == course[0]) {
+              //console.log("not match", attended);
+              notInCourses.push(course);
+            }
+          });
+        });
                 
-        $("#報名課程").text(userForAddingCourse + " - 報名課程");
-        console.log(userForAddingCourse);
+        var table = $('#notInCoursesTable').DataTable();
+        table.clear();
+        table.rows.add(notInCourses);
+        table.draw();
+        
+        $("#報名課程").text(userName + " - 報名課程");
+       // console.log(userName);
 
         $("#memberDiv").hide();
         $("#courseDiv").show();
@@ -542,9 +576,9 @@
       $("#myCoursesHistory_paginate").css("font-family", "Noto Sans TC");
     }
 
-    function buildCoursesTable() {
-      var coursesTable = $('#coursesTable').DataTable({
-        data: courseData,
+    function buildCoursesTable() {               
+      var coursesTable = $('#notInCoursesTable').DataTable({
+        data: notInCourses, //courseData,
         //order: false,
         pageLength: 10,
         lengthChange: false,
@@ -573,16 +607,16 @@
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'selectCourseBtn to-edit' style='width: 100px'>報名</button> "
+            defaultContent: "<button id='joinBtn' class = 'selectCourseBtn to-edit' style='width: 100px'>報名</button> "
           }
         ]
       });
 
       // ============ Function for selectCourseBtn ================================================== 
-      $('#coursesTable tbody').on('click', '.selectCourseBtn', function() {
+      $('#notInCoursesTable tbody').on('click', '.selectCourseBtn', function() {
         console.log("selectCourseBtn is clicked");
         
-        var coursesTable = $('#coursesTable').DataTable();
+        var coursesTable = $('#notInCoursesTable').DataTable();
         var data = coursesTable.row($(this).parents('tr')).data();
         var courseName = data[0];
         var courseIdx = -1;
@@ -601,8 +635,7 @@
               }
             };
           }
-        })
-        
+        })        
         //console.log(courseIdx);
         
         if(!alreadyInCourse) {
@@ -615,15 +648,18 @@
                   //console.log(error);
                   return 0;
                 }
-                  console.log('Write to database successful');
+                  //console.log('Write to database successful');
+                  //console.log("aaa", $("#joinBtn").text());
+                  alert("報名成功!");
+                  //closeMyCourses();
           });          
         }      
 
       });
       
-      $("#coursesTable_filter").css("font-family", "Noto Sans TC");
-      $("#coursesTable_info").css("font-family", "Noto Sans TC");
-      $("#coursesTable_paginate").css("font-family", "Noto Sans TC");
+      $("#notInCoursesTable_filter").css("font-family", "Noto Sans TC");
+      $("#notInCoursesTable_info").css("font-family", "Noto Sans TC");
+      $("#notInCoursesTable_paginate").css("font-family", "Noto Sans TC");
     }
 
     function signIn() {

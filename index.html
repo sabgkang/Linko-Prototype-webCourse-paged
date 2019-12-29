@@ -27,8 +27,7 @@
 <body >
   <!--  for test-->
   
-<!--
-  <button class="btn-blue" onclick="window.location.href = '1-addMember.html';">Click Here</button>
+  <button class="btn-red" onclick="window.location.href = '1-addMember.html';">FOR TEST ONLY!!!!!</button>
   <button onclick="myFunctionA()">SignIn A</button>
   <button onclick="myFunctionB()">SignIn B</button>
 
@@ -38,7 +37,6 @@
   <button onclick="myFunctionW()">Write Database</button>
 
   <button onclick="myFunctionSignOut()">SignOut</button>
--->
 
   <!--  end of for test -->
   
@@ -199,7 +197,7 @@
       <table id="coachList" class="display" style="width:100%;">
         <thead>
           <tr id="coachList-header">
-            <th style="width: 80px;">老師姓名</th>
+            <th style="width: 160px;">老師姓名</th>
             <th style="width: 40px">姓別</th>
             <th>其他說明</th>
           </tr>
@@ -309,7 +307,7 @@
       <script type="text/javascript">
         var courseNum = 0; // Update from Database
         var inAddCourse = false;
-        var version = " V0.92";
+        var version = " V0.93";
         
         $("#titleHeader").text("林口運動中心 - 團體課程管理"+version);
 
@@ -442,6 +440,10 @@
 //            會員資料: JSON.stringify(memberData),
 //
 //          });
+          
+          var courseMember =[
+            ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],         
+          ];          
 
           database.ref('users/林口運動中心/課程管理').set({
             課程會員: JSON.stringify(courseMember),
