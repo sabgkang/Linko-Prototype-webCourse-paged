@@ -96,7 +96,7 @@
             <th style="width: 190px">操作</th>
           </tr>
         </thead>
-      </table>S
+      </table>
       <div style="height: 100px"></div>
       <hr>
       <table id="myCoursesHistory" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
@@ -236,12 +236,22 @@
       readTimes++;
       var result = snapshot.val();
       memberData = JSON.parse(result.會員資料);
+      
+      // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
+      memberData.forEach(function(member, index, array){
+        var head, tail;
+        head=member[1].slice(0,5);
+        tail=member[1].slice(29,33)
+        //console.log(head+".."+tail);
+        member[1]=head.toUpperCase()+".."+tail.toUpperCase();
+      });
+      
       buildMemberTable();      
       if (readTimes == toRead) {
         $.loading.end();
       }
     });
-
+    
     buildMyCoursesTable();
     //buildCoursesTable();
     $("#addMemberInfo").hide();
@@ -771,6 +781,15 @@
         var result = snapshot.val();
         memberData = JSON.parse(result.會員資料);
         $.loading.end();
+        
+        // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
+        memberData.forEach(function(member, index, array){
+          var head, tail;
+          head=member[1].slice(0,5);
+          tail=member[1].slice(29,33)
+          //console.log(head+".."+tail);
+          member[1]=head.toUpperCase()+".."+tail.toUpperCase();
+        });        
 
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
@@ -780,8 +799,9 @@
     }
 
     function addMember() {
-      $("#memberDiv").hide();
-      $("#addMemberInfo").show();
+      //$("#memberDiv").hide();
+      //$("#addMemberInfo").show();
+      alert("抱歉，目前只能用 LINE 新增客戶");
     }
 
 
@@ -810,15 +830,16 @@
       memberData.push(dataToAdd);
 
       // 將新客戶寫入資料庫
-      database.ref('users/林口運動中心/客戶管理').set({
-        會員資料: JSON.stringify(memberData),
-      }, function(error) {
-        if (error) {
-          console.log("Write to database error, revert courseData back");
-          courseData.pop();
-        }
-        console.log('Write to database successful');
-      });
+// 先 Remark，避免誤寫入資料
+//      database.ref('users/林口運動中心/客戶管理').set({
+//        會員資料: JSON.stringify(memberData),
+//      }, function(error) {
+//        if (error) {
+//          console.log("Write to database error, revert courseData back");
+//          courseData.pop();
+//        }
+//        console.log('Write to database successful');
+//      });
 
       var table = $('#memberTable').DataTable();
       table.clear().draw();
