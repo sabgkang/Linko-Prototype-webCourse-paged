@@ -615,9 +615,9 @@
                   return 0;
                 }
                   console.log('Write to database successful');
+                  location.reload();
           });          
         }
-        
         
 
       });      
@@ -660,7 +660,9 @@
           }
         ]
       });
-
+      
+      //location.reload();
+      
       $("#myCoursesHistory_filter").css("font-family", "Noto Sans TC");
       $("#myCoursesHistory_info").css("font-family", "Noto Sans TC");
       $("#myCoursesHistory_paginate").css("font-family", "Noto Sans TC");
