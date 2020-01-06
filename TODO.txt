@@ -1,8 +1,5 @@
-index.html 尚須完成 繳費 和 簽到
-
-每頁加上 uCare Logo 及 宇康醫電中文字
-
-for LINE 報名及課程列表(比賽資料) 網頁
+Bug to Fix:
+1. LINE Id 有 33字元，顯示超長，所以在客戶管理時，將 memberData 的 LineId 簡短為 UXXXX..YYYY，但刪除客戶時，會將簡化的 memberData 寫回資料庫，造成會員比對錯誤。@ Line 240 in 1-addMember.html =====> Fixed 2020-01-06 V0.98
 
 
 用 JavaScript 取得目前網址與其它網址參數簡單語法 http://www.wibibi.com/info.php?tid=82

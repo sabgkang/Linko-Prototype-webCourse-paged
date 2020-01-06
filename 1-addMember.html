@@ -177,6 +177,7 @@
 
     var isLogin = false;
     var memberData = [];
+    var memberLineId =[];
     var myCoursesData = [];
     var myCoursesHistory = [];
     var courseData = [];
@@ -238,7 +239,9 @@
       memberData = JSON.parse(result.會員資料);
       
       // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
+      memberLineId=[];
       memberData.forEach(function(member, index, array){
+        memberLineId.push(member[1]);
         var head, tail;
         head=member[1].slice(0,5);
         tail=member[1].slice(29,33)
@@ -461,6 +464,10 @@
 
         console.log(userName);
 
+        memberData.forEach(function(member, index, array){
+          member[1]=memberLineId[index];
+        });
+        
         memberData.forEach(function(member, index, array) {
           if (member[0] == userName) {
             memberData.splice(index, 1);
