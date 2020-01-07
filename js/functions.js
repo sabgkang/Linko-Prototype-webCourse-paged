@@ -63,9 +63,9 @@ function courseConfirm() {
               $("#otherDesc").val(),
             ];
 
-    // 更新 local courseData
+    // 更新 local courseData 及 courseMember
     courseData.push(dataToAdd);
-
+    courseMember.push(["U" + zeroFill(courseNum, 4)]); //Fix bug:重複週期 新增課程 會只有增加最後一個課程 到 courseMember
   }
   
 
@@ -82,7 +82,7 @@ function courseConfirm() {
     console.log('Write to database successful');
   });
 
-  courseMember.push(["U" + zeroFill(courseNum, 4)]);
+
   database.ref('users/林口運動中心/課程管理').set({
     課程會員: JSON.stringify(courseMember),
   }, function (error) {
@@ -413,6 +413,11 @@ function addMemberInfo() {
 
   //console.log(dataToAdd);
 
+  // memberData 取回 完整的 LINE Id
+  memberData.forEach(function(member, index, array){
+    member[1]=memberLineId[index];
+  });
+  
   // 更新 local courseData
   memberData.push(dataToAdd);
 

@@ -464,10 +464,12 @@
 
         console.log(userName);
 
+        // memberData 取回 完整的 LINE Id
         memberData.forEach(function(member, index, array){
           member[1]=memberLineId[index];
         });
         
+        // 刪除客戶
         memberData.forEach(function(member, index, array) {
           if (member[0] == userName) {
             memberData.splice(index, 1);
