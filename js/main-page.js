@@ -2,7 +2,7 @@ function initMainPage() {
   $("#loginDiv").hide();
   $("#addCourse").hide();
   $("#coachTable").hide();
-  $("#courseDetail").hide();
+//  $("#courseDetail").hide();
   $("#newCoachInfo").hide();
   $("#memberDiv").hide();
   $("#addMemberInfo").hide();
@@ -207,8 +207,19 @@ function initMainPage() {
             };
           });
 
-          // Convert 
-          var dataToAdd = tmp1.slice(0, 2);
+          // 準備 coureMemberSet 
+          //var dataToAdd = tmp1.slice(0, 2);
+          var dataToAdd = tmp1.slice(0, 1);
+          var fullLineId = tmp1.slice(1, 2);
+
+          var head, tail;
+          head=fullLineId[0].slice(0,5);
+          tail=fullLineId[0].slice(29,33)
+          shortLineId=head.toUpperCase()+".."+tail.toUpperCase();         
+            
+          dataToAdd.push(shortLineId);
+         
+          
           var tmp2 = tmp1.slice(4, 7);
           tmp2.forEach(function (obj, idx, array) {
             dataToAdd.push(obj);
@@ -397,7 +408,7 @@ function initMainPage() {
               }
             ]
   });
-  
+  $("#courseDetail").hide();
   $('#courseMemberTable tbody').on('click', '.payButton', function () {
     var confirmIt = confirm("請確定已繳費!");
     if (!confirmIt) return 0;
