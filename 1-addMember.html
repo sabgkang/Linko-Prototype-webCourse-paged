@@ -36,7 +36,7 @@
       <thead>
         <tr id="table-header">
           <th style="width: 80px">姓名</th>
-          <th style="width: 80px">LINE ID</th>
+<!--          <th style="width: 80px">LINE ID</th>-->
           <th style="width: 50px">性別</th>
           <th style="width: 100px">生日</th>
           <th style="width: 50px">電話</th>
@@ -177,6 +177,7 @@
 
     var isLogin = false;
     var memberData = [];
+    var memberDisplayData = [];    
     var memberLineId =[];
     var myCoursesData = [];
     var myCoursesHistory = [];
@@ -238,16 +239,25 @@
       var result = snapshot.val();
       memberData = JSON.parse(result.會員資料);
       
-      // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
-      memberLineId=[];
+      memberDisplayData=[];
       memberData.forEach(function(member, index, array){
-        memberLineId.push(member[1]);
-        var head, tail;
-        head=member[1].slice(0,5);
-        tail=member[1].slice(29,33)
+        var tmpData=[];
+        tmpData.push(member[0]); tmpData.push(member[2]);
+        tmpData.push(member[3]); tmpData.push(member[4]);
+        tmpData.push(member[5]); tmpData.push(member[6]); 
+        memberDisplayData.push(tmpData);
+      })
+      
+      // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
+      //memberLineId=[];
+      //memberData.forEach(function(member, index, array){
+        //memberLineId.push(member[1]);
+        //var head, tail;
+        //head=member[1].slice(0,5);
+        //tail=member[1].slice(29,33)
         //console.log(head+".."+tail);
-        member[1]=head.toUpperCase()+".."+tail.toUpperCase();
-      });
+        //member[1]=head.toUpperCase()+".."+tail.toUpperCase();
+      //});
       
       buildMemberTable();      
       if (readTimes == toRead) {
@@ -265,17 +275,17 @@
 
     function buildMemberTable() {
       var memberTable = $('#memberTable').DataTable({
-        data: memberData,
+        data: memberDisplayData,
         pageLength: 10,
         lengthChange: false,
         deferRender: true,
         columns: [{ //title: 姓名
             className: "centerCell"
           },
-          {
-            //title: LINE ID
-            className: "centerCell"
-          },
+//          {
+//            //title: LINE ID
+//            className: "centerCell"
+//          },
           { //title: "姓別"
             className: "centerCell"
           },
@@ -318,7 +328,8 @@
 
 
         var data = memberTable.row($(this).parents('tr')).data();
-        userName = data[0];
+        var userName = data[0];
+        var userPhoneNumber = data[3];
         
         // 取消課程用
         userForCancelCourse = data[0];
@@ -331,7 +342,8 @@
           var itemLength = item.length;
           for (var i = 0; i < itemLength; i++) {
             //console.log(i, item[i][0]);
-            if (item[i][0] == userName) {
+            //if (item[i][0] == userName) {
+            if (item[i][4] == userPhoneNumber) {
               myCoursesNumbers.push(item[0]);
             };
           }
@@ -405,8 +417,10 @@
         console.log("attendBtn is clicked");
 
         var data = memberTable.row($(this).parents('tr')).data();
-        userName = data[0];
-        userForAddingCourse = data[0]; // simple patch
+        var userName = data[0];
+        var userPhoneNumber = data[3];
+        userForAddingCourse = data[3]; // simple patch
+        
         
         // 尋找未報名的課程
         var myCoursesNumbers = [];
@@ -416,7 +430,8 @@
           var matched = false;
           for (var i = 0; i < itemLength; i++) {
             //console.log(i, item[i][0]);
-            if (item[i][0] == userName) {
+            //if (item[i][0] == userName) {
+            if (item[i][4] == userPhoneNumber) {
               matched = true;
             };
           }
@@ -460,18 +475,20 @@
 
         var memberTable = $('#memberTable').DataTable();
         var data = memberTable.row($(this).parents('tr')).data();
-        userName = data[0];
+        var userName = data[0];
+        var userPhoneNumber = data[3];
 
-        console.log(userName);
+        console.log(userName, userPhoneNumber);
 
         // memberData 取回 完整的 LINE Id
-        memberData.forEach(function(member, index, array){
-          member[1]=memberLineId[index];
-        });
+        //memberData.forEach(function(member, index, array){
+        //  member[1]=memberLineId[index];
+        //});
         
         // 刪除客戶
         memberData.forEach(function(member, index, array) {
-          if (member[0] == userName) {
+          //if (member[0] == userName) {
+          if (member[4] == userPhoneNumber) {  
             memberData.splice(index, 1);
           }
         });
@@ -487,9 +504,18 @@
           console.log('Write to database successful');
         });
 
+        memberDisplayData=[];
+        memberData.forEach(function(member, index, array){
+          var tmpData=[];
+          tmpData.push(member[0]); tmpData.push(member[2]);
+          tmpData.push(member[3]); tmpData.push(member[4]);
+          tmpData.push(member[5]); tmpData.push(member[6]); 
+          memberDisplayData.push(tmpData);
+        })        
+        
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
-        memberTable.rows.add(memberData);
+        memberTable.rows.add(memberDisplayData);
         memberTable.draw();
 
       });
@@ -556,10 +582,10 @@
         
         //更新表格
         data[5] = "已繳費";       
-        var memberTable = $('#myCoursesTable').DataTable();
-        memberTable.clear().draw();
-        memberTable.rows.add(myCoursesData);
-        memberTable.draw();        
+        var table = $('#myCoursesTable').DataTable();
+        table.clear().draw();
+        table.rows.add(myCoursesData);
+        table.draw();        
         
         //TODO: 更新 courseMember
         courseMember.forEach(function(item, index, array) {
@@ -730,7 +756,7 @@
             courseIdx = index;
             for (var i=0; i< course.length; i++) {
               //console.log(course[i][0]);
-              if (course[i][0]==userForAddingCourse) {
+              if (course[i][3]==userForAddingCourse) {
                 alert("您已經報過此課程了");
                 alreadyInCourse = true;
                 return(0); //只跳出 forEach 迴圈
@@ -738,10 +764,18 @@
             };
           }
         })        
+        
         //console.log(courseIdx);
+        var memberIdx=-1;
+        memberData.forEach(function(member, index, array){
+          if (member[4] == userForAddingCourse) {
+            memberIdx = index;
+          }
+        });
+        
         
         if(!alreadyInCourse) {
-          courseMember[courseIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
+          courseMember[courseIdx].push([memberData[memberIdx][0], "未繳費", "未簽到", memberData[memberIdx][1], memberData[memberIdx][4]]);
           // Write courseMember to database
           database.ref('users/林口運動中心/課程管理').set({
             課程會員: JSON.stringify(courseMember),
@@ -802,9 +836,18 @@
           member[1]=head.toUpperCase()+".."+tail.toUpperCase();
         });        
 
+        memberDisplayData=[];
+        memberData.forEach(function(member, index, array){
+          var tmpData=[];
+          tmpData.push(member[0]); tmpData.push(member[2]);
+          tmpData.push(member[3]); tmpData.push(member[4]);
+          tmpData.push(member[5]); tmpData.push(member[6]); 
+          memberDisplayData.push(tmpData);
+        })
+        
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
-        memberTable.rows.add(memberData);
+        memberTable.rows.add(memberDisplayData);
         memberTable.draw();
       });
     }

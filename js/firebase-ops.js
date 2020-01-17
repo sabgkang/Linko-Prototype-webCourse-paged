@@ -118,7 +118,7 @@ function readFromDB() {
 }
 
 function readMemberfromDB() {
-  console.log("Read memberData Database");  
+  console.log("Read  Database");  
   
   var toRead = 1;
   var readTimes = 0;  
@@ -135,7 +135,7 @@ function readMemberfromDB() {
     // 更新客戶表格
 //    var memberTable = $('#memberTable').DataTable();
 //    memberTable.clear().draw();
-//    memberTable.rows.add(memberData);
+//    memberTable.rows.add();
 //    memberTable.draw();
     
     

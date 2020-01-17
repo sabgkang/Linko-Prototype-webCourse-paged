@@ -370,7 +370,7 @@ function memberManage() {
   //  $("#memberDiv").show();
   //  var memberTable = $('#memberTable').DataTable();
   //  memberTable.clear().draw();
-  //  memberTable.rows.add(memberData);
+  //  memberTable.rows.add();
   //  memberTable.draw();
 }
 
@@ -413,10 +413,10 @@ function addMemberInfo() {
 
   //console.log(dataToAdd);
 
-  // memberData 取回 完整的 LINE Id
-  memberData.forEach(function(member, index, array){
-    member[1]=memberLineId[index];
-  });
+  //  取回 完整的 LINE Id
+//  memberData.forEach(function(member, index, array){
+//    member[1]=memberLineId[index];
+//  });
   
   // 更新 local courseData
   memberData.push(dataToAdd);
@@ -424,7 +424,7 @@ function addMemberInfo() {
 
   // 課程寫入資料庫
   database.ref('users/林口運動中心/客戶管理').set({
-    會員資料: JSON.stringify(memberData),
+    會員資料: JSON.stringify(),
   }, function (error) {
     if (error) {
       console.log("Write to database error");
@@ -437,7 +437,7 @@ function addMemberInfo() {
   // 更新課程表格  
   //  var memberTable = $('#memberTable').DataTable();
   //  memberTable.clear().draw();
-  //  memberTable.rows.add(memberData);
+  //  memberTable.rows.add();
   //  memberTable.draw();  
   //  
   //  $("#addMemberInfo").hide();

@@ -205,10 +205,10 @@
       <table id="courseMemberTable" class="display" style="width:100%;font-family:'Noto Sans TC'">
         <thead>
           <tr id="table-header">
-            <th style="width: 50px">姓名</th>
-            <th style="width: 100px">LINE ID</th>
+            <th style="width: 150px">姓名</th>
+<!--            <th style="width: 100px">LINE ID</th>-->
             <th style="width: 50px">電話</th>
-            <th style="width: 100px">身分證號</th>
+<!--            <th style="width: 100px">身分證號</th>-->
             <th>地址</th>
             <th style="width: 50px">繳費</th>
             <th style="width: 50px">簽到</th>
@@ -243,20 +243,20 @@
 
   <script>
     //   資料格式
-    //    var memberData = [
-    //      ["謝小憲", "Jacky",   "男", "1966-01-01", "09XXXXXXXX", "A1XXXXXXXX", "台北市"],
-    //      ["許小琦", "Chantal", "女", "1966-02-02", "09XXXXXXXX", "A1XXXXXXXX", "竹北市"],   
-    //      ["盧小宏", "Tony",    "男", "1966-03-03", "09XXXXXXXX", "A1XXXXXXXX", "新竹市"],   
+    //    var memberData= [
+    //      ["小陳", "U001", "男", "1966-01-01", "09XXXXX111", "A1XXXXXAAA", "台北市"],
+    //      ["小白", "U002", "女", "1966-02-02", "09XXXXX222", "A1XXXXXBBB", "竹北市"],   
+    //      ["小華", "U003", "男", "1966-03-03", "09XXXXX333", "A1XXXXXCCC", "新竹市"],   
     //    ];
     //
     //    var courseMember =[
-    //      ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],
-    //      ["U0002", ["許小琦", "已繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],   
-    //      ["U0003", ["盧小宏", "未繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],           
+    //      ["U0001", ["小陳", "已繳費", "已簽到", "U001", "09XXXXX111"], ["小白", "未繳費", "未簽到", "U002", "09XXXXX222"]],
+    //      ["U0002", ["小白", "已繳費", "未簽到", "U002", "09XXXXX222"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],   
+    //      ["U0003", ["小華", "未繳費", "未簽到", "U003", "09XXXXX333"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],           
     //    ];
     //
     //    var courseMemberSet = [
-    //      ["謝東憲", "Jacky", "09XXXXXXXX", "A1XXXXXXXX", "台北市總統府", "YES", "NO"],
+    //      ["小陳", "09XXXXX111", "台北市", "未繳費", "未簽到"],
     //    ];
     //
     //    [ID, Name, Coach, date/time, Calories, Max.Persons, Assist, Fee, OtherDesc]
@@ -284,7 +284,7 @@
     var memberData = [];
     var courseForDetail;
 
-    // 從 Firebase 資料庫取得 courseData, courseHistory, memberData, courseMember, coachSet, 
+    // 從 Firebase 資料庫取得 courseData, courseHistory, , courseMember, coachSet, 
     // 定義在 js/firebase-ops.js 中
     readFromDB();
 
@@ -392,13 +392,22 @@
 //           });
 //
 //
-//          database.ref('users/林口運動中心/客戶管理').set({
-//            會員資料: JSON.stringify(memberData),
-//
-//          });
+
+        var  memberData= [
+          ["小陳", "U001", "男", "1966-01-01", "09XXXXX111", "A1XXXXXAAA", "台北市"],
+          ["小白", "U002", "女", "1966-02-02", "09XXXXX222", "A1XXXXXBBB", "竹北市"],   
+          ["小華", "U003", "男", "1966-03-03", "09XXXXX333", "A1XXXXXCCC", "新竹市"],
+          ["小陳", "U004", "男", "1976-01-01", "09XXXXX444", "A1XXXXXDDD", "台北市"],          
+        ];
+        database.ref('users/林口運動中心/客戶管理').set({
+          會員資料: JSON.stringify(memberData),
+
+        });
           
         var courseMember =[
-          ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],         
+          ["U0001", ["小陳", "已繳費", "已簽到", "U001", "09XXXXX111"], ["小白", "未繳費", "未簽到", "U002", "09XXXXX222"]],
+          ["U0002", ["小白", "已繳費", "未簽到", "U002", "09XXXXX222"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],   
+          ["U0003", ["小華", "未繳費", "未簽到", "U003", "09XXXXX333"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],           
         ];          
 
         database.ref('users/林口運動中心/課程管理').set({

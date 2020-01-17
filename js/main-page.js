@@ -8,7 +8,7 @@ function initMainPage() {
   $("#addMemberInfo").hide();
 
   //  var memberTable = $('#memberTable').DataTable({
-  //    data: memberData,
+  //    data: ,
   //    pageLength: 10,
   //    lengthChange: false,
   //    deferRender: true,
@@ -202,10 +202,11 @@ function initMainPage() {
         var tmp1 = [];
         item.forEach(function (item1, index, array) {
           memberData.forEach(function (item2, index, array) {
-            if (item1[0] == item2[0]) {
+            //console.log(item1[3],item2[1]);
+            if (item1[3] == item2[1]) {
               tmp1 = item2;
             };
-          });
+          });        
 
           // 準備 coureMemberSet 
           //var dataToAdd = tmp1.slice(0, 2);
@@ -217,10 +218,11 @@ function initMainPage() {
           tail=fullLineId[0].slice(29,33)
           shortLineId=head.toUpperCase()+".."+tail.toUpperCase();         
             
-          dataToAdd.push(shortLineId);
+          //dataToAdd.push(shortLineId);
          
           
-          var tmp2 = tmp1.slice(4, 7);
+          dataToAdd.push(tmp1.slice(4, 5));
+          var tmp2 = tmp1.slice(6, 7);
           tmp2.forEach(function (obj, idx, array) {
             dataToAdd.push(obj);
           })
@@ -375,17 +377,17 @@ function initMainPage() {
     columns: [{ //title: "Name"
         className: "centerCell"
               },
-      {
-        //title: "LINE ID"
-        className: "centerCell"
-              },
+//      {
+//        //title: "LINE ID"
+//        className: "centerCell"
+//              },
       { //title: "電話"
         className: "centerCell"
               },
-      {
-        //title: "身分證號"
-        className: "centerCell"
-              },
+//      {
+//        //title: "身分證號"
+//        className: "centerCell"
+//              },
       {
         //title: "地址"
         className: "centerCell"
@@ -449,7 +451,7 @@ function initMainPage() {
       //console.log(courseMemberSet[i][0], data[0]);
       if (courseMemberSet[i][0] == data[0]) {
         //console.log("match");
-        courseMemberSet[i][5] = "已繳費";
+        courseMemberSet[i][3] = "已繳費";
       };
     };
     
@@ -510,7 +512,7 @@ function initMainPage() {
       //console.log(courseMemberSet[i][0], data[0]);
       if (courseMemberSet[i][0] == data[0]) {
         //console.log("match");
-        courseMemberSet[i][6] = "已簽到";
+        courseMemberSet[i][4] = "已簽到";
       };
     };
     
