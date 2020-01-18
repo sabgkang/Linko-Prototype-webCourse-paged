@@ -877,13 +877,13 @@
         $.loading.end();
         
         // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
-        memberData.forEach(function(member, index, array){
-          var head, tail;
-          head=member[1].slice(0,5);
-          tail=member[1].slice(29,33)
-          //console.log(head+".."+tail);
-          member[1]=head.toUpperCase()+".."+tail.toUpperCase();
-        });        
+        //memberData.forEach(function(member, index, array){
+        //  var head, tail;
+        //  head=member[1].slice(0,5);
+        //  tail=member[1].slice(29,33)
+        //  //console.log(head+".."+tail);
+        //  member[1]=head.toUpperCase()+".."+tail.toUpperCase();
+        //});        
       
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
