@@ -133,7 +133,10 @@
             <th style="width: 200px">老師</th>
             <th style="width: 120px">時間</th>
             <th style="width: 70px">卡路里燃燒</th>
+            <th style="width: 50px">課程費用</th>            
             <th style="width: 50px">課程人數</th>
+            <th style="width: 50px">報名人數</th>
+            <th style="width: 50px">繳費人數</th>             
             <th style="width: 150px">操作</th>
           </tr>
         </thead>
@@ -177,7 +180,6 @@
 
     var isLogin = false;
     var memberData = [];
-    var memberDisplayData = [];    
     var memberLineId =[];
     var myCoursesData = [];
     var myCoursesHistory = [];
@@ -185,6 +187,7 @@
     var courseHistory = [];
     var notInCourses=[];
     var username;
+    var userPhoneNumberforPayment;
     
     var userForAddingCourse;
     var userForCancelCourse;
@@ -239,24 +242,16 @@
       var result = snapshot.val();
       memberData = JSON.parse(result.會員資料);
       
-      memberDisplayData=[];
-      memberData.forEach(function(member, index, array){
-        var tmpData=[];
-        tmpData.push(member[0]); tmpData.push(member[2]);
-        tmpData.push(member[3]); tmpData.push(member[4]);
-        tmpData.push(member[5]); tmpData.push(member[6]); 
-        memberDisplayData.push(tmpData);
-      })
       
       // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
       //memberLineId=[];
       //memberData.forEach(function(member, index, array){
-        //memberLineId.push(member[1]);
-        //var head, tail;
-        //head=member[1].slice(0,5);
-        //tail=member[1].slice(29,33)
-        //console.log(head+".."+tail);
-        //member[1]=head.toUpperCase()+".."+tail.toUpperCase();
+      //  memberLineId.push(member[1]);
+      //  var head, tail;
+      //  head=member[1].slice(0,5);
+      //  tail=member[1].slice(29,33)
+      //  console.log(head+".."+tail);
+      //  member[1]=head.toUpperCase()+".."+tail.toUpperCase();
       //});
       
       buildMemberTable();      
@@ -275,7 +270,7 @@
 
     function buildMemberTable() {
       var memberTable = $('#memberTable').DataTable({
-        data: memberDisplayData,
+        data: memberData,
         pageLength: 10,
         lengthChange: false,
         deferRender: true,
@@ -326,10 +321,10 @@
         $("#myCourseDiv").show();
         $("#memberDiv").hide();
 
-
         var data = memberTable.row($(this).parents('tr')).data();
         var userName = data[0];
         var userPhoneNumber = data[3];
+        userPhoneNumberforPayment = data[3]; //傳遞到 payFeeBtn
         
         // 取消課程用
         userForCancelCourse = data[0];
@@ -358,7 +353,7 @@
           myCoursesNumbers.forEach(function(attended, index, array) {
             if (attended == course[0]) {
               //console.log("match", attended);
-              myCoursesData.push(course);
+              myCoursesData.push(course.slice(0, course.length+1));
             }
           });
         });
@@ -397,8 +392,7 @@
             }
           });
         });
-
-
+        
         var table = $('#myCoursesTable').DataTable();
         table.clear();
         table.rows.add(myCoursesData);
@@ -503,19 +497,10 @@
           }
           console.log('Write to database successful');
         });
-
-        memberDisplayData=[];
-        memberData.forEach(function(member, index, array){
-          var tmpData=[];
-          tmpData.push(member[0]); tmpData.push(member[2]);
-          tmpData.push(member[3]); tmpData.push(member[4]);
-          tmpData.push(member[5]); tmpData.push(member[6]); 
-          memberDisplayData.push(tmpData);
-        })        
         
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
-        memberTable.rows.add(memberDisplayData);
+        memberTable.rows.add(memberData);
         memberTable.draw();
 
       });
@@ -524,8 +509,9 @@
 
     function buildMyCoursesTable() {
       var myCoursesTable = $('#myCoursesTable').DataTable({
+        order: [[ 0, "desc" ]],
         data: myCoursesData,
-        order: false,
+        //order: false,
         pageLength: 10,
         lengthChange: false,
         deferRender: true,
@@ -565,14 +551,19 @@
                 
         var myCoursesTable = $('#myCoursesTable').DataTable();
         var data = myCoursesTable.row($(this).parents('tr')).data();
-        var courseName = data[0];
+        var courseId = data[0];
         
         if (data[5]=="已繳費") {
           alert("已經繳過費");
           return 0;
         }
         
-        var makePayment = confirm("確定已繳費");
+        if (檢查課程是否滿員(courseId)=="已滿員") {
+          alert("課程已滿員");
+          return 0;
+        };
+        
+        var makePayment = confirm("確定要繳費");
         if (!makePayment) {
           return 0;
         }
@@ -587,14 +578,17 @@
         table.rows.add(myCoursesData);
         table.draw();        
         
-        //TODO: 更新 courseMember
+        //更新 courseData 中課程的繳費人數 加 1
+        更新課程報名繳費人數(courseId, "繳費人數", 1);
+          
+        //更新 courseMember
         courseMember.forEach(function(item, index, array) {
-          //console.log(item[0], courseName);
-          if (item[0]==courseName){
+          //console.log(item[0], courseId);
+          if (item[0]==courseId){
             var itemLength = item.length;
             for (var i = 0; i < itemLength; i++) {
               //console.log(i, item[i][0]);
-              if (item[i][0] == userName) {
+              if (item[i][4] == userPhoneNumberforPayment) {
                 item[i][1]="已繳費"; // 修改的是 courseMember
               };
             };
@@ -619,13 +613,13 @@
         
         var myCoursesTable = $('#myCoursesTable').DataTable();
         var data = myCoursesTable.row($(this).parents('tr')).data();
-        var courseName = data[0];
+        var courseId = data[0];
         var courseIdx = -1;
         var alreadyInCourse = false;
         
         // 檢查是否已報過名
         courseMember.forEach(function(course, index, array){
-          if (course[0]==courseName) {
+          if (course[0]==courseId) {
             for (var i=0; i< course.length; i++) {
               //console.log(course[i][0]);
               if (course[i][0]==userForCancelCourse) {
@@ -640,7 +634,25 @@
         })
                    
         if(alreadyInCourse) {
-          console.log("aaa");
+          
+          // 課程報名人數 減 1
+          courseData.forEach(function(course, index, array){
+            if (course[0]==courseId) {
+              course[7] = (parseInt(course[7])-1).toString(); //已報名人數 減 1
+            }        
+          }); 
+          
+          database.ref('users/林口運動中心/團課課程').set({
+            現在課程: JSON.stringify(courseData),
+            過去課程: JSON.stringify(courseHistory),
+          }, function(error){
+               if (error) {
+                 //console.log(error);
+                 return 0;
+               }
+                 console.log('Write to database successful');
+          });          
+          
           closeMyCourses();
           database.ref('users/林口運動中心/課程管理').set({
             課程會員: JSON.stringify(courseMember),
@@ -662,8 +674,9 @@
       $("#myCoursesTable_paginate").css("font-family", "Noto Sans TC");
 
       var myCoursesHistory = $('#myCoursesHistory').DataTable({
+        order: [[ 0, "desc" ]],
         data: myCoursesHistory,
-        order: false,
+        //order: false,
         pageLength: 10,
         lengthChange: false,
         deferRender: true,
@@ -705,6 +718,7 @@
 
     function buildCoursesTable() {               
       var coursesTable = $('#notInCoursesTable').DataTable({
+        order: [[ 0, "desc" ]],
         data: notInCourses, //courseData,
         //order: false,
         pageLength: 10,
@@ -728,9 +742,21 @@
             className: "centerCell"
           },
           {
+            //title: "課程費用"
+            className: "centerCell"
+                  },               
+          {
             //title: "課程人數"
             className: "centerCell"
-          },
+                  },
+          {
+            //title: "報名人數"
+            className: "centerCell"
+                  },
+          {
+            //title: "繳費人數"
+            className: "centerCell"
+                  }, 
           {
             //title: "操作",
             data: null,
@@ -746,17 +772,16 @@
         
         var coursesTable = $('#notInCoursesTable').DataTable();
         var data = coursesTable.row($(this).parents('tr')).data();
-        var courseName = data[0];
+        var courseId = data[0];
         var courseIdx = -1;
         var alreadyInCourse = false;
         // 檢查是否已報過名
         courseMember.forEach(function(course, index, array){
-          if (course[0]==courseName) {
-            //console.log(courseName);
+          if (course[0]==courseId) {
             courseIdx = index;
             for (var i=0; i< course.length; i++) {
               //console.log(course[i][0]);
-              if (course[i][3]==userForAddingCourse) {
+              if (course[i][4]==userForAddingCourse) {
                 alert("您已經報過此課程了");
                 alreadyInCourse = true;
                 return(0); //只跳出 forEach 迴圈
@@ -765,17 +790,41 @@
           }
         })        
         
+        if (檢查課程是否滿員(courseId)=="已滿員") {
+          alert("課程已滿員");
+          return 0;
+        };        
+        
         //console.log(courseIdx);
         var memberIdx=-1;
         memberData.forEach(function(member, index, array){
-          if (member[4] == userForAddingCourse) {
+          if (member[3] == userForAddingCourse) {
             memberIdx = index;
           }
         });
         
-        
         if(!alreadyInCourse) {
-          courseMember[courseIdx].push([memberData[memberIdx][0], "未繳費", "未簽到", memberData[memberIdx][1], memberData[memberIdx][4]]);
+          courseMember[courseIdx].push([memberData[memberIdx][0], "未繳費", "未簽到", memberData[memberIdx][6], memberData[memberIdx][3]]);
+
+          //更新 courseData 中課程的報名人數 加 1
+          更新課程報名繳費人數(courseId, "報名人數", 1);
+          
+ 
+          database.ref('users/林口運動中心/團課課程').set({
+            現在課程: JSON.stringify(courseData),
+            過去課程: JSON.stringify(courseHistory),
+          }, function(error){
+               if (error) {
+                 //console.log(error);
+                 return 0;
+               }
+                 console.log('Write to database successful');
+          });
+          
+          coursesTable.clear().draw();
+          coursesTable.rows.add(courseData);
+          coursesTable.draw();          
+          
           // Write courseMember to database
           database.ref('users/林口運動中心/課程管理').set({
             課程會員: JSON.stringify(courseMember),
@@ -788,7 +837,7 @@
                   //console.log("aaa", $("#joinBtn").text());
                   alert("報名成功!");
                   //closeMyCourses();
-          });          
+          });           
         }      
 
       });
@@ -835,19 +884,10 @@
           //console.log(head+".."+tail);
           member[1]=head.toUpperCase()+".."+tail.toUpperCase();
         });        
-
-        memberDisplayData=[];
-        memberData.forEach(function(member, index, array){
-          var tmpData=[];
-          tmpData.push(member[0]); tmpData.push(member[2]);
-          tmpData.push(member[3]); tmpData.push(member[4]);
-          tmpData.push(member[5]); tmpData.push(member[6]); 
-          memberDisplayData.push(tmpData);
-        })
-        
+      
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
-        memberTable.rows.add(memberDisplayData);
+        memberTable.rows.add(memberData);
         memberTable.draw();
       });
     }
@@ -923,6 +963,61 @@
       $("#memberDiv").show();
            
     }
+    
+
+    function 檢查課程是否滿員(課程編號){
+      var 已滿員 = false;
+      courseData.forEach(function(course, index, array){
+        if (course[0]==課程編號) {
+          var 已報名人數 = parseInt(course[7]); //已報名人數
+          var 上限人數   = parseInt(course[6]); //上限人數
+          //測試用: 上限人數 = 2;
+          if (已報名人數 >= 上限人數) {
+            //alert(修改資料+"已滿員");
+            已滿員 = true;
+            return; // 只跳出迴圈
+          }
+        }        
+      });   
+
+      if (已滿員) {
+        return "已滿員";      
+      } else {
+        return 0;
+      }
+    }
+    
+    function 更新課程報名繳費人數(課程編號, 修改資料, 修改數量){
+      var dataIndex;
+      switch (修改資料) {
+        case "報名人數":
+         dataIndex = 7;
+         break;
+        case "繳費人數":
+         dataIndex = 8;
+         break;
+        default:
+         console.log("修改資料不對");
+         return 1;
+      }
+
+      courseData.forEach(function(course, index, array){
+        if (course[0]==課程編號) {
+          course[dataIndex] = (parseInt(course[dataIndex])+修改數量).toString(); //報名或繳費人數 加 修改數量
+        }        
+      });   
+
+      database.ref('users/林口運動中心/團課課程').set({
+        現在課程: JSON.stringify(courseData),
+        過去課程: JSON.stringify(courseHistory),
+      }, function(error){
+           if (error) {
+             //console.log(error);
+             return 0;
+           }
+             console.log('Write to database successful');
+      });     
+    }    
     
   </script>
 

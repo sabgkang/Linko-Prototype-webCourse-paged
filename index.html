@@ -67,7 +67,10 @@
         <th style="width: 200px">老師</th>
         <th style="width: 120px">時間</th>
         <th style="width: 70px">卡路里燃燒</th>
+        <th style="width: 50px">課程費用</th>        
         <th style="width: 50px">課程人數</th>
+        <th style="width: 50px">報名人數</th>
+        <th style="width: 50px">繳費人數</th>                
         <th style="width: 150px">操作</th>
 
       </tr>
@@ -90,7 +93,10 @@
         <th style="width: 200px">老師</th>
         <th style="width: 120px">時間</th>
         <th style="width: 70px">卡路里燃燒</th>
+        <th style="width: 50px">課程費用</th>          
         <th style="width: 50px">課程人數</th>
+        <th style="width: 50px">報名人數</th>
+        <th style="width: 50px">繳費人數</th>            
         <th style="width: 150px"></th>
       </tr>
     </thead>
@@ -244,9 +250,10 @@
   <script>
     //   資料格式
     //    var memberData= [
-    //      ["小陳", "U001", "男", "1966-01-01", "09XXXXX111", "A1XXXXXAAA", "台北市"],
-    //      ["小白", "U002", "女", "1966-02-02", "09XXXXX222", "A1XXXXXBBB", "竹北市"],   
-    //      ["小華", "U003", "男", "1966-03-03", "09XXXXX333", "A1XXXXXCCC", "新竹市"],   
+    //      ["小陳", "男", "1966-01-01", "09XXXXX111", "A1XXXXXAAA", "台北市", "U001"],
+    //      ["小白", "女", "1966-02-02", "09XXXXX222", "A1XXXXXBBB", "竹北市", "U002"],   
+    //      ["小華", "男", "1966-03-03", "09XXXXX333", "A1XXXXXCCC", "新竹市", "U003"],
+    //      ["小陳", "男", "1976-01-01", "09XXXXX444", "A1XXXXXDDD", "台北市", "U004"],   
     //    ];
     //
     //    var courseMember =[
@@ -259,16 +266,16 @@
     //      ["小陳", "09XXXXX111", "台北市", "未繳費", "未簽到"],
     //    ];
     //
-    //    [ID, Name, Coach, date/time, Calories, Max.Persons, Assist, Fee, OtherDesc]
+    //    [ID, Name, Coach, date/time, Calories, Fee, Max.Persons, 已報名人數, 已繳費人數, Assist, OtherDesc]
     //    var courseData = [
-    //      ["U0002", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
-    //        "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
+    //      ["U0002", "TEST #2", "測試 老師 #2", "2019-01-13 18:00", "200", "120", "20", "10", "10",
+    //        "alice", ""
     //      ],
     //    ];
     //
     //    var courseHistory = [
-    //      ["U0001", "夜店風 Zumba 燃脂", "Jacky", "2019.08.29 18:30", "150", "30",
-    //        "Chantal", "200", "帶你體驗不一樣的夜店風 Zumba 課程"
+    //      ["U0001", "TEST #1", "測試 老師 #1", "2020-01-09 18:30", "100", "100", "10", "10", "10"
+    //        "", ""
     //      ],
     //    ];    
     //    var coachSet = [
@@ -300,7 +307,7 @@
   <script type="text/javascript">
     var courseNum = 0; // Update from Database
     var inAddCourse = false;
-    var version = " V1.0";
+    var version = " V1.1";
 
     $("#titleHeader").text("林口運動中心 - 團體課程管理"+version);
 
@@ -372,48 +379,50 @@
           return 0;
         }
 
-//          console.log("Write Database" + userId);
-//
-//          //database.ref('users/林口運動中心/'+userId+'/團課課程').set({
-//          database.ref('users/林口運動中心/團課課程').set({
-//            現在課程: JSON.stringify(courseData),
-//            過去課程: JSON.stringify(courseHistory),
-//          }, function(error){
-//               if (error) {
-//                 //console.log(error);
-//                 return 0;
-//               }
-//                 console.log('Write to database successful');
-//          });
-//
-//          
+        var courseHistory = [
+          ["U0001", "TEST #1", "測試 老師 #1", "2020-01-09 18:30", "100", "100", "10", "10", "10",
+            "", ""
+          ],
+        ];        
+        
+        database.ref('users/林口運動中心/團課課程').set({
+          現在課程: JSON.stringify(courseData),
+          過去課程: JSON.stringify(courseHistory),
+        }, function(error){
+             if (error) {
+               //console.log(error);
+               return 0;
+             }
+               console.log('Write to database successful');
+        });
+
+          
 //           database.ref('users/林口運動中心/教練管理').set({
 //            老師資料: JSON.stringify(coachSet),  
 //           });
+
+
+//        var  memberData= [    
+//          ["小陳", "男", "1966-01-01", "09XXXXX111", "A1XXXXXAAA", "台北市", "U001"],
+//          ["小白", "女", "1966-02-02", "09XXXXX222", "A1XXXXXBBB", "竹北市", "U002"],   
+//          ["小華", "男", "1966-03-03", "09XXXXX333", "A1XXXXXCCC", "新竹市", "U003"],
+//          ["小陳", "男", "1976-01-01", "09XXXXX444", "A1XXXXXDDD", "台北市", "U004"],              
+//        ];
+//        database.ref('users/林口運動中心/客戶管理').set({
+//          會員資料: JSON.stringify(memberData),
 //
+//        });
+//          
+//        var courseMember =[
+//          ["U0001", ["小陳", "已繳費", "已簽到", "U001", "09XXXXX111"], ["小白", "未繳費", "未簽到", "U002", "09XXXXX222"]],
+//          ["U0002", ["小白", "已繳費", "未簽到", "U002", "09XXXXX222"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],   
+//          ["U0003", ["小華", "未繳費", "未簽到", "U003", "09XXXXX333"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],           
+//        ];          
 //
-
-        var  memberData= [
-          ["小陳", "U001", "男", "1966-01-01", "09XXXXX111", "A1XXXXXAAA", "台北市"],
-          ["小白", "U002", "女", "1966-02-02", "09XXXXX222", "A1XXXXXBBB", "竹北市"],   
-          ["小華", "U003", "男", "1966-03-03", "09XXXXX333", "A1XXXXXCCC", "新竹市"],
-          ["小陳", "U004", "男", "1976-01-01", "09XXXXX444", "A1XXXXXDDD", "台北市"],          
-        ];
-        database.ref('users/林口運動中心/客戶管理').set({
-          會員資料: JSON.stringify(memberData),
-
-        });
-          
-        var courseMember =[
-          ["U0001", ["小陳", "已繳費", "已簽到", "U001", "09XXXXX111"], ["小白", "未繳費", "未簽到", "U002", "09XXXXX222"]],
-          ["U0002", ["小白", "已繳費", "未簽到", "U002", "09XXXXX222"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],   
-          ["U0003", ["小華", "未繳費", "未簽到", "U003", "09XXXXX333"], ["小陳", "已繳費", "未簽到", "U001", "09XXXXX111"]],           
-        ];          
-
-        database.ref('users/林口運動中心/課程管理').set({
-          課程會員: JSON.stringify(courseMember),
-
-        });
+//        database.ref('users/林口運動中心/課程管理').set({
+//          課程會員: JSON.stringify(courseMember),
+//
+//        });
 
 
         i++;

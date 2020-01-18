@@ -57,9 +57,11 @@ function courseConfirm() {
               $("#coachName").val(),
               nextDateStr + " " + $("#courseTime").val(),
               $("#Calories").val(),
+              $("#fee").val(),      
               $("#maxPersons").val(),
+              "0", //已報名人數
+              "0", //已繳費人數
               $("#assistName").val(),
-              $("#fee").val(),
               $("#otherDesc").val(),
             ];
 
@@ -102,7 +104,7 @@ function courseConfirm() {
   $("#addCourse").hide();
   $("#courseTable").show();
   $("#spacerBetweenTables").show();
-$("#courseHistoryTable").show();
+  $("#courseHistoryTable").show();
 
   $(".dataTables_filter").show();
   $(".dataTables_info").show();
@@ -160,21 +162,23 @@ function refreshCourse() {
 
 function backToHome() {
   console.log("Refresh Course");
+  
+  location.reload();
 
-  $("#courseDetail").hide();
-
-  $("#courseTable").show();
-  $("#courseHistoryTable").show();
-  $("#spacerBetweenTables").show();
-
-  $(".dataTables_filter").show();
-  $(".dataTables_info").show();
-  $('#courseTable_paginate').show();
-  $('#courseHistoryTable_paginate').show();
-  $("#addCourse").hide();
-  $("#inProgress").show();
-  $("#addCourseBtn").show();
-  $("#refreshBtn").show();
+//  $("#courseDetail").hide();
+//
+//  $("#courseTable").show();
+//  $("#courseHistoryTable").show();
+//  $("#spacerBetweenTables").show();
+//
+//  $(".dataTables_filter").show();
+//  $(".dataTables_info").show();
+//  $('#courseTable_paginate').show();
+//  $('#courseHistoryTable_paginate').show();
+//  $("#addCourse").hide();
+//  $("#inProgress").show();
+//  $("#addCourseBtn").show();
+//  $("#refreshBtn").show();
 }
 
 function courseUpdate() {
@@ -443,4 +447,58 @@ function addMemberInfo() {
   //  $("#addMemberInfo").hide();
   //  $("#memberDiv").show(); 
 
+}
+
+//function 檢查課程是否滿員(課程編號){
+//  var 已滿員 = false;
+//  courseData.forEach(function(course, index, array){
+//    if (course[0]==課程編號) {
+//      var 已報名人數 = parseInt(course[7]); //已報名人數
+//      var 上限人數   = parseInt(course[6]); //上限人數
+//      //測試用: 上限人數 = 2;
+//      if (已報名人數 >= 上限人數) {
+//        //alert(修改資料+"已滿員");
+//        已滿員 = true;
+//        return; // 只跳出迴圈
+//      }
+//    }        
+//  });   
+//
+//  if (已滿員) {
+//    return "已滿員";      
+//  } else {
+//    return 0;
+//  }
+//}
+
+function 更新課程報名繳費人數(課程編號, 修改資料, 修改數量){
+  var dataIndex;
+  switch (修改資料) {
+    case "報名人數":
+     dataIndex = 7;
+     break;
+    case "繳費人數":
+     dataIndex = 8;
+     break;
+    default:
+     console.log("修改資料不對");
+     return 1;
+  }
+
+  courseData.forEach(function(course, index, array){
+    if (course[0]==課程編號) {
+      course[dataIndex] = (parseInt(course[dataIndex])+修改數量).toString(); //報名或繳費人數 加 修改數量
+    }        
+  });   
+
+  database.ref('users/林口運動中心/團課課程').set({
+    現在課程: JSON.stringify(courseData),
+    過去課程: JSON.stringify(courseHistory),
+  }, function(error){
+       if (error) {
+         //console.log(error);
+         return 0;
+       }
+         console.log('Write to database successful');
+  });     
 }

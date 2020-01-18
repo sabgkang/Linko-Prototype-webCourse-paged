@@ -72,9 +72,21 @@ function initMainPage() {
         className: "centerCell"
               },
       {
-        //title: "人數"
+        //title: "課程費用"
+        className: "centerCell"
+              },               
+      {
+        //title: "課程人數"
         className: "centerCell"
               },
+      {
+        //title: "報名人數"
+        className: "centerCell"
+              },
+      {
+        //title: "繳費人數"
+        className: "centerCell"
+              },              
       {
         //title: "操作",
         data: null,
@@ -203,32 +215,17 @@ function initMainPage() {
         item.forEach(function (item1, index, array) {
           memberData.forEach(function (item2, index, array) {
             //console.log(item1[3],item2[1]);
-            if (item1[3] == item2[1]) {
+            if (item1[3] == item2[6]) {
               tmp1 = item2;
             };
           });        
 
           // 準備 coureMemberSet 
-          //var dataToAdd = tmp1.slice(0, 2);
-          var dataToAdd = tmp1.slice(0, 1);
-          var fullLineId = tmp1.slice(1, 2);
+          var dataToAdd = tmp1.slice(0, 1);  //姓名        
+          dataToAdd.push(tmp1.slice(3, 4));  //電話
+          dataToAdd.push(tmp1.slice(5, 6));  //地址        
 
-          var head, tail;
-          head=fullLineId[0].slice(0,5);
-          tail=fullLineId[0].slice(29,33)
-          shortLineId=head.toUpperCase()+".."+tail.toUpperCase();         
-            
-          //dataToAdd.push(shortLineId);
-         
-          
-          dataToAdd.push(tmp1.slice(4, 5));
-          var tmp2 = tmp1.slice(6, 7);
-          tmp2.forEach(function (obj, idx, array) {
-            dataToAdd.push(obj);
-          })
-
-          dataToAdd.push(item1[1], item1[2]);
-          //console.log("bbbbb", dataToAdd);
+          dataToAdd.push(item1[1], item1[2]); //繳費狀態及簽到狀態
 
           courseMemberSet.push(dataToAdd);
         });
@@ -333,9 +330,21 @@ function initMainPage() {
         className: "centerCell"
               },
       {
-        //title: "人數"
+        //title: "課程費用"
+        className: "centerCell"
+              },              
+      {
+        //title: "課程人數"
         className: "centerCell"
               },
+      {
+        //title: "報名人數"
+        className: "centerCell"
+              },
+      {
+        //title: "繳費人數"
+        className: "centerCell"
+              }, 
       {
         //title: "操作",
         className: "centerCell",
@@ -412,40 +421,42 @@ function initMainPage() {
   });
   $("#courseDetail").hide();
   $('#courseMemberTable tbody').on('click', '.payButton', function () {
-    var confirmIt = confirm("請確定已繳費!");
+    var confirmIt = confirm("請確定要繳費!");
     if (!confirmIt) return 0;
     
     console.log("payButton is clicked");
 
     //var data = courseMemberTable.row($(this)).data();
     var data = courseMemberTable.row($(this).parents('tr')).data();    
-    //console.log(data[0]);
+    console.log(data[1][0]); // data[1][0] 為電話號碼
     
     var thisCourse;
     var thisIndex;
     courseMember.forEach(function(item, index, array) {
-      //console.log(item[1][0]);
       if (item[0]== courseForDetail) {
-        //console.log(item, data[0]);
         thisCourse = item;
         thisIndex = index;
       }
     });
       
-    //console.log(thisCourse, thisIndex, data[0]);
       
     var thisCourseLength = thisCourse.length;
     var thisI;
     for (var i = 0; i < thisCourseLength; i++) {
-      if (thisCourse[i][0] == data[0]) {
+      if (thisCourse[i][4] == data[1][0]) {
         //console.log(thisCourse[i], thisIndex, i);
         thisI = i;
       };
     }   
+ 
+    //console.log(thisCourse, thisIndex, thisI, data[1][0]);
     
     //console.log(courseMember[thisIndex][thisI][0],courseMember[thisIndex][thisI][1]);
     courseMember[thisIndex][thisI][1] = "已繳費";
-
+    
+    //更新 courseData 中課程的繳費人數 加 1
+    更新課程報名繳費人數(thisCourse[0], "繳費人數", 1);
+          
     // Update courseMemberSet 及其 Table  
     for (var i=0; i< courseMemberSet.length; i++){
       //console.log(courseMemberSet[i][0], data[0]);
@@ -573,10 +584,10 @@ function initMainPage() {
     // Update courseMemberSet 及其 Table  
     for (var i=0; i< courseMemberSet.length; i++){
       //console.log(courseMemberSet[i][0], data[0]);
-      if (courseMemberSet[i][0] == data[0]) {
+      if (courseMemberSet[i][1] == data[1]) {
         //console.log("match");
-        courseMemberSet[i][5] = "未繳費";
-        courseMemberSet[i][6] = "未簽到";
+        courseMemberSet[i][3] = "未繳費";
+        courseMemberSet[i][4] = "未簽到";
       };
     };
     
@@ -584,6 +595,25 @@ function initMainPage() {
     table.clear().draw();
     table.rows.add(courseMemberSet);
     table.draw();    
+    
+    // 課程繳費人數 減 1
+    courseData.forEach(function(course, index, array){
+      if (course[0]==courseForDetail) {
+        course[8] = (parseInt(course[8])-1).toString(); //已報名人數 減 1
+      }        
+    }); 
+
+    database.ref('users/林口運動中心/團課課程').set({
+      現在課程: JSON.stringify(courseData),
+      過去課程: JSON.stringify(courseHistory),
+    }, function(error){
+         if (error) {
+           //console.log(error);
+           return 0;
+         }
+           console.log('Write to database successful');
+    });
+
     
     // Write courseMember to database
     database.ref('users/林口運動中心/課程管理').set({
